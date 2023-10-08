@@ -61,7 +61,8 @@ public class Intake {
             /*if(newPos>armMid&&claw.getPosition()>0.4) {
                 runWrist(1);
             }
-            else */if(newPos<.3){
+            else */
+            if(newPos<.3){
                     runWrist(newPos + (.3-newPos)/.3*endMod);
                 if(isClawOpen()) {
                 }
