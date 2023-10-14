@@ -19,7 +19,7 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         //Intake intake = new Intake(hardwareMap, telemetry);
         //Outtake outtake = new Outtake(hardwareMap, telemetry);
-        WaitForLoops waitForLoops = new WaitForLoops();
+        //WaitForLoops waitForLoops = new WaitForLoops();
 
         //set up variables
         double joyx, joyy, joyz, gas, basespeed, armpos, wristmod, offset, slideMovement,
@@ -49,8 +49,8 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
 
 
         while (!isStarted() && !isStopRequested()) {
-            outtake.openClaw();
-            armpos = intake.runArm(Intake.Height.UPRIGHT);
+            //outtake.openClaw();
+            //armpos = intake.runArm(Intake.Height.UPRIGHT);
             try {
                 previousGamepad1.copy(currentGamepad1);
                 previousGamepad2.copy(currentGamepad2);
@@ -95,7 +95,7 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
             }
             telemetry.addData("angle", drivetrain.getIMUData()/PI*180);
 
-            isOuttakeAtTarget = outtake.update();
+            //isOuttakeAtTarget = outtake.update();
 
     //set up inputs
 
@@ -148,7 +148,6 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
                     autoIntakeMode=true;
                 }
             }
-
 
 
             resetDriveAngle = currentGamepad1.dpad_up; //use when the robot is facing away from you
@@ -432,7 +431,7 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
 
     }
 
-    private class WaitForLoops{
+    /*private class WaitForLoops{
         int loopsSoFar = 0;
 
         ArrayList<String> names = new ArrayList<String>();
@@ -461,5 +460,5 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
             }
             return isEventTriggered;
         }
-    }
+    }*/
 }
