@@ -297,7 +297,6 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
 
 
 
-
             //set and print motor powers
             double[] motorPowers = drivetrain.driveVectors(centricity, joyx, joyy, joyz, basespeed+gas);
             for (double line:motorPowers){
@@ -461,4 +460,5 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
             return isEventTriggered;
         }
     }*/
+}
 }
