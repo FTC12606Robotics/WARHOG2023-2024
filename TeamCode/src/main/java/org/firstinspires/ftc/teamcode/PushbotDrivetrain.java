@@ -199,8 +199,8 @@ public class PushbotDrivetrain {
 
 
     //put in the three vectors (z being rotation) and it will move the motors the correct powers
-    public double[] driveVectors(Centricity centric, double joyx, double joyy, double joyz, double spd){ //spd is a speed coefficient
-
+    //public double[] driveVectors(Centricity centric, double joyx, double joyy, double joyz, double spd){ //spd is a speed coefficient
+    public double[] driveVectors(double joyx, double joyy, double joyz, double spd){
         //set up movement vectors and relate them to input ("joy") vectors
         double x, y, max;
         //if(centric== Centricity.FIELD){

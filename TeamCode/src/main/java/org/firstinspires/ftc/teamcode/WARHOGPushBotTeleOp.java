@@ -298,9 +298,10 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
 
 
             //set and print motor powers
-            double[] motorPowers = pushDrivetrain.driveVectors(centricity, joyx, joyy, joyz, basespeed+gas);
+            //double[] motorPowers = pushDrivetrain.driveVectors(centricity, joyx, joyy, joyz, basespeed+gas);
+            double[] motorPowers = pushDrivetrain.driveVectors( joyx, joyy, joyz, basespeed+gas);
             for (double line:motorPowers){
-                telemetry.addLine( Double.toString(line) );
+                telemetry.addLine( Double.toString(line));
             }
 
             //reset the angle
