@@ -178,7 +178,9 @@ public class Outtake {
         return (slide.getMode()==DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public int showSlideValue() { return slide.getCurrentPosition(); }
+    public int showSlideValue() {
+        return slide.getCurrentPosition();
+    }
 
     //this method moves the claw to a position
     public void runClaw(double pos){

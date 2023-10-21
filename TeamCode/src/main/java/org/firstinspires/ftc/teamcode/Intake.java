@@ -165,6 +165,7 @@ public class Intake {
         if(isClawOpen()){
             openClaw();
         }
+
         return armMid;
     }
 
