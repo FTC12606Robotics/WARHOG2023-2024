@@ -16,7 +16,7 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         //set up classes
-        Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
+        PushbotDrivetrain pushDrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
         //Intake intake = new Intake(hardwareMap, telemetry);
         //Outtake outtake = new Outtake(hardwareMap, telemetry);
         //WaitForLoops waitForLoops = new WaitForLoops();
@@ -75,7 +75,7 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
             telemetry.update();
         }
 
-        drivetrain.setAngleOffset(offset);
+        pushDrivetrain.setAngleOffset(offset);
         oneDriver = false;
         autoEjectMode = false;
         autoIntakeMode = false;
@@ -93,7 +93,7 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
                 // Swallow the possible exception, it should not happen as
                 // currentGamepad1/2 are being copied from valid Gamepads.
             }
-            telemetry.addData("angle", drivetrain.getIMUData()/PI*180);
+            telemetry.addData("angle", pushDrivetrain.getIMUData()/PI*180);
 
             //isOuttakeAtTarget = outtake.update();
 
@@ -298,15 +298,16 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
 
 
             //set and print motor powers
-            double[] motorPowers = drivetrain.driveVectors(centricity, joyx, joyy, joyz, basespeed+gas);
+            //double[] motorPowers = pushDrivetrain.driveVectors(centricity, joyx, joyy, joyz, basespeed+gas);
+            double[] motorPowers = pushDrivetrain.driveVectors( joyx, joyy, joyz, basespeed+gas);
             for (double line:motorPowers){
-                telemetry.addLine( Double.toString(line) );
+                telemetry.addLine( Double.toString(line));
             }
 
             //reset the angle
-            if(resetDriveAngle){
-                drivetrain.resetAngle();
-            }
+            //if(resetDriveAngle){
+            //    pushDrivetrain.resetAngle();
+            //}
 
             //move arm
             /*armpos += armposChange;
@@ -316,7 +317,7 @@ public class WARHOGPushBotTeleOp extends LinearOpMode {
             if(retractIntakeArm){
                 armpos = intake.runArm(Intake.Height.RETRACTED);
             }
-            modAngle = (drivetrain.getIMUData()/PI*180)%360;
+            modAngle = (pushDrivetrain.getIMUData()/PI*180)%360;
             telemetry.addData("mod angle", modAngle);
             telemetry.addData("left cone stack", leftConeStack);
             telemetry.addData("right cone stack", rightConeStack);
