@@ -223,8 +223,12 @@ public class WARHOGTeleOp extends LinearOpMode {
             else {
                 //code to switch between field centric and bot centric drive
                 if(centricityToggle){
-                    if(centricity==Drivetrain.Centricity.BOT){centricity = Drivetrain.Centricity.FIELD;}
-                    else{centricity = Drivetrain.Centricity.BOT;}
+                    if(centricity==Drivetrain.Centricity.BOT){
+                        centricity = Drivetrain.Centricity.FIELD;
+                    }
+                    else{
+                        centricity = Drivetrain.Centricity.BOT;
+                    }
                 }
 
                 armposChange = currentGamepad2.left_stick_y*intakeArmSpeed;
@@ -307,7 +311,6 @@ public class WARHOGTeleOp extends LinearOpMode {
 
 
 
-
             //set and print motor powers
             double[] motorPowers = drivetrain.driveVectors(centricity, joyx, joyy, joyz, basespeed+gas);
             for (double line:motorPowers){
@@ -374,7 +377,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(toggleIntakeClaw){
                 intake.toggleClaw();
             }
-
 
 
 
