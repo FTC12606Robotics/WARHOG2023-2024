@@ -28,6 +28,8 @@ public class WARHOGTeleOp extends LinearOpMode {
         Intake intake = new Intake(hardwareMap, telemetry);
         Outtake outtake = new Outtake(hardwareMap, telemetry);
         WaitForLoops waitForLoops = new WaitForLoops();
+        //For drone Launch
+        DroneLaunch droneLaunch = new DroneLaunch(hardwareMap, telemetry);
 
         //set up variables
         double joyx, joyy, joyz, gas, basespeed, armpos, wristmod, offset, slideMovement,
@@ -42,6 +44,9 @@ public class WARHOGTeleOp extends LinearOpMode {
                 extendIntakeArm = false, retractIntakeArm = false, uprightIntakeArm = false, sizingIntakeArm = false,
                 intakeCone=false, wristFixed = false, wristFixedToggle = false, isOuttakeAtTarget,
                 outtakeClawMoveIntake = false;
+        //For drone launch
+        boolean launchDrone;
+
         int leftConeStack = 5, rightConeStack = 5;
 
         offset = 0;
@@ -55,6 +60,7 @@ public class WARHOGTeleOp extends LinearOpMode {
         Gamepad previousGamepad1 = new Gamepad();
         Gamepad previousGamepad2 = new Gamepad();
 
+        droneLaunch.ArmDrone();
 
         while (!isStarted() && !isStopRequested()) {
             outtake.openClaw();
@@ -387,6 +393,14 @@ public class WARHOGTeleOp extends LinearOpMode {
                     armpos = intake.runArm(Intake.Height.UPRIGHT);
                 }*/
                 telemetry.addLine("Toggle OuttakeClaw");
+            }
+
+            //Set Up input to launch drone
+            launchDrone = gamepad2.right_stick_button;
+
+            //Launch Drone
+            if(launchDrone){
+                droneLaunch.LaunchDrone();
             }
 
             //increase slide maximum
