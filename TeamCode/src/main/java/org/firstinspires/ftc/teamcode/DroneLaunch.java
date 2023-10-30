@@ -12,18 +12,21 @@ public class DroneLaunch {
     private Telemetry telemetry;
     boolean launched = false;
 
-    double armedPos = 0.5;
-    double launchedPos = 0;
+    double armedPos = 0.0;
+    double launchedPos = 0.7;
 
     DroneLaunch(HardwareMap hardwareMap, Telemetry telemetry){
         launcher = hardwareMap.get(Servo.class, "launcher");
     }
 
     public void ArmDrone() {
-        if (!launched) {
+
+        launcher.setPosition(armedPos);
+
+        /*if (!launched) {
             //Keep Drone Launcher Armed
             launcher.setPosition(armedPos);
-        }
+        }*/
     }
 
     //Call to launch the drone
@@ -31,6 +34,6 @@ public class DroneLaunch {
         //Launch Drone
         launched = true;
         launcher.setPosition(launchedPos);
-        telemetry.addLine("Drone Launched");
+        //telemetry.addLine("Drone Launched");
     }
 }
