@@ -2,20 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.apriltag.AprilTagDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-
-import java.util.ArrayList;
-
-@Autonomous(name="WARHOGAuto", group="")
-public class WARHOGAuto extends LinearOpMode {
-    public WARHOGAuto() throws InterruptedException {}
+@Autonomous(name="WARHOGAutoPushBot", group="")
+public class WARHOGAutoPushBot extends LinearOpMode {
+    public WARHOGAutoPushBot() throws InterruptedException {}
 /*
     private StartPosColor startPosColor = StartPosColor.RED;
     private enum StartPosColor {
@@ -68,9 +58,9 @@ public class WARHOGAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
-        Intake intake = new Intake(hardwareMap, telemetry);
-        Outtake outtake = new Outtake(hardwareMap, telemetry);
+        PushbotDrivetrain pushDrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
+        //Intake intake = new Intake(hardwareMap, telemetry);
+        //Outtake outtake = new Outtake(hardwareMap, telemetry);
 
         //intake.runArm(Intake.Height.UPRIGHT);
 
@@ -366,13 +356,12 @@ public class WARHOGAuto extends LinearOpMode {
         telemetry.addLine("Stage 1 complete");
         telemetry.update();
 
-
     }
     private void RunMotorsForSeconds(double secs, double power) throws InterruptedException{
-        Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
+        PushbotDrivetrain pushdrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
 
-        drivetrain.setMotorPowers(power, power, power,power);
+        pushdrivetrain.setMotorPowers(power, power, power,power);
         sleep((long)(secs*1000));
-        drivetrain.setMotorPowers(0,0,0,0);
+        pushdrivetrain.setMotorPowers(0,0,0,0);
     }
 }

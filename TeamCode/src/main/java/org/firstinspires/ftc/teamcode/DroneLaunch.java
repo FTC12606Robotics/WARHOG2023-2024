@@ -34,6 +34,7 @@ public class DroneLaunch {
         //Launch Drone
         launched = true;
         launcher.setPosition(launchedPos);
-        //telemetry.addLine("Drone Launched");
+        telemetry.addLine("Drone Launched");
+        telemetry.update();
     }
 }
