@@ -302,10 +302,10 @@ public class WARHOGTeleOp extends LinearOpMode {
                 wristFixed=true;
             }
             if(toggleIntakeClaw&&!intake.isClawOpen()){
-                wristFixed=false;
+                //wristFixed=false;
             }
-            if(intake.getArmPos()>.95){
-                wristFixed=false;
+            if(intake.getArmPos()>1.1){
+                //wristFixed=false;
             }
 
             if(wristFixed){
