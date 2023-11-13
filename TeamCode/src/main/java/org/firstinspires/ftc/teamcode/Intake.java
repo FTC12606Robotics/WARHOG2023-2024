@@ -58,21 +58,9 @@ public class Intake {
 
         //if matched, make the wrist keep the cone upright
         if (wristMode== WristMode.MATCHED){
-            /*if(newPos>armMid&&claw.getPosition()>0.4) {
-                runWrist(1);
-            }
-            else */
             if(newPos<.3){
                     runWrist(newPos + (.3-newPos)/.3*endMod);
-                if(isClawOpen()) {
-                }
-                else{
-                    //runWrist(.1);
-                }
             }
-            /*if (Math.abs(newPos-getArmPos())>.5){
-                //sleep(200);
-            }*/
             else {
                 runWrist(newPos);
             }
@@ -213,6 +201,7 @@ public class Intake {
         }
     }
 
+    //Autonomous use, Don't think it is needed anymore
     public void intakeCone() throws InterruptedException{
         closeClaw();
         sleep(25);

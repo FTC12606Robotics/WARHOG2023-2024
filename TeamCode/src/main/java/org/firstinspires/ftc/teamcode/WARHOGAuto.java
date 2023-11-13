@@ -15,19 +15,16 @@ import java.util.ArrayList;
 
 @Autonomous(name="WARHOGAuto", group="")
 public class WARHOGAuto extends LinearOpMode {
-    public WARHOGAuto() throws InterruptedException {}
-/*
-    private StartPosColor startPosColor = StartPosColor.RED;
-    private enum StartPosColor {
-        RED, BLUE
-    };
-    private StartPosPosition startPosPosition = StartPosPosition.RIGHT;
-    private enum StartPosPosition{
-        LEFT, RIGHT
-    };
 
-    OpenCvCamera camera;
-    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+    public WARHOGAuto() throws InterruptedException {}
+
+    private StartPosColor startPosColor = StartPosColor.RED;
+    private enum StartPosColor {RED, BLUE};
+    private StartPosPosition startPosPosition = StartPosPosition.FRONT;
+    private enum StartPosPosition{FRONT, BACK};
+
+    //OpenCvCamera camera;
+    //AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     Gamepad currentGamepad1 = new Gamepad();
     Gamepad currentGamepad2 = new Gamepad();
@@ -40,13 +37,14 @@ public class WARHOGAuto extends LinearOpMode {
     int posMod = 0;
     int cycles = 2;
 
-    double speed = .8;
+    double speed = .75;
 
     //this stuff does not need to be changed
     // Lens intrinsics
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
     // You will need to do your own calibration for other configurations!
+/*
     double fx = 578.272;
     double fy = 578.272;
     double cx = 402.145;
@@ -62,7 +60,6 @@ public class WARHOGAuto extends LinearOpMode {
     int ID_TAG_OF_INTEREST = 18;
 
     AprilTagDetection tagOfInterest = null;
-
  */
 
     @Override
@@ -99,7 +96,7 @@ public class WARHOGAuto extends LinearOpMode {
         telemetry.setMsTransmissionInterval(50);
 
         //init loop
-        /*while (!isStarted() && !isStopRequested()) {
+        while (!isStarted() && !isStopRequested()) {
             intake.runArm(Intake.Height.STARTSIZING);
             //set up inputs - have previous so that you can check rising edge
             try {
@@ -121,11 +118,11 @@ public class WARHOGAuto extends LinearOpMode {
             if (currentGamepad1.x) {
                 startPosColor = StartPosColor.BLUE;
             }
-            if (currentGamepad1.dpad_left) {
-                startPosPosition = StartPosPosition.LEFT;
+            if (currentGamepad1.dpad_down) {
+                startPosPosition = StartPosPosition.BACK;
             }
-            if (currentGamepad1.dpad_right) {
-                startPosPosition = StartPosPosition.RIGHT;
+            if (currentGamepad1.dpad_up) {
+                startPosPosition = StartPosPosition.FRONT;
             }
 
             if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up){
@@ -158,7 +155,8 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.addData("Position", startPosPosition);
             telemetry.addData("Cycles", cycles);
             telemetry.addData("Speed", speed);
-            ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
+            /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             //detect apriltags
             if(currentDetections.size() != 0)
@@ -210,7 +208,7 @@ public class WARHOGAuto extends LinearOpMode {
                     tagToTelemetry(tagOfInterest);
                 }
 
-            }
+            }*/
 
             telemetry.update();
             sleep(20);
@@ -219,7 +217,7 @@ public class WARHOGAuto extends LinearOpMode {
 
         // start command just came in
 
-        intake.runArm(Intake.Height.DRIVESIZING);
+        //intake.runArm(Intake.Height.DRIVESIZING);
 
         //set modifier values
         switch (startPosColor){
@@ -231,15 +229,25 @@ public class WARHOGAuto extends LinearOpMode {
                 break;
         }
         switch (startPosPosition){
-            case LEFT:
+            case FRONT:
                 posMod = -1;
                 break;
-            case RIGHT:
+            case BACK:
                 posMod = 1;
                 break;
         }
 
-        outtake.closeClaw();
+        sleep(1000);
+        drivetrain.MoveForDis(100, .3);
+        //sleep(2000);
+        //pushDrivetrain.RotateForDegree(90, speed-.25);
+        //sleep(1000);
+        //pushDrivetrain.MoveForDis(12,speed);
+        telemetry.addLine("Stage 1 complete");
+        telemetry.update();
+
+        //outtake.closeClaw();
+        /*
 
         // drive to pole and raise slide
         drivetrain.MoveForDis(52.5, speed);
@@ -337,9 +345,9 @@ public class WARHOGAuto extends LinearOpMode {
         intake.runArm(Intake.Height.RETRACTED);
         telemetry.addLine("Stage 3 complete");
         telemetry.update();
-    }
+    }*/
 
-    void tagToTelemetry(AprilTagDetection detection)
+    /*void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
         telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
@@ -350,27 +358,28 @@ public class WARHOGAuto extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
 
     }*/
-
         //2023-2024 Autonomous
+        /*
         while (!isStarted() && !isStopRequested()) {
             RunMotorsForSeconds(1, .2);
-            sleep(3000);
+            sleep(2000);
         }
 
-        //Start Command
+        //When Start Command is Given
         RunMotorsForSeconds(2, .5);
         sleep(2000);
         RunMotorsForSeconds(1, -.5);
         sleep(3000);
 
+        drivetrain.RotateForDegree(90, .3);
+        RunMotorsForSeconds(2, .5);
         telemetry.addLine("Stage 1 complete");
         telemetry.update();
-
+        */
 
     }
     private void RunMotorsForSeconds(double secs, double power) throws InterruptedException{
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
-
         drivetrain.setMotorPowers(power, power, power,power);
         sleep((long)(secs*1000));
         drivetrain.setMotorPowers(0,0,0,0);

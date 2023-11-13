@@ -3,21 +3,20 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 @Autonomous(name="WARHOGAutoPushBot", group="")
 public class WARHOGAutoPushBot extends LinearOpMode {
-    public WARHOGAutoPushBot() throws InterruptedException {}
-/*
-    private StartPosColor startPosColor = StartPosColor.RED;
-    private enum StartPosColor {
-        RED, BLUE
-    };
-    private StartPosPosition startPosPosition = StartPosPosition.RIGHT;
-    private enum StartPosPosition{
-        LEFT, RIGHT
-    };
 
-    OpenCvCamera camera;
-    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+    public WARHOGAutoPushBot() throws InterruptedException {}
+
+    private StartPosColor startPosColor = StartPosColor.RED;
+    private enum StartPosColor {RED, BLUE};
+    private StartPosPosition startPosPosition = StartPosPosition.FRONT;
+    private enum StartPosPosition{FRONT, BACK};
+
+    //OpenCvCamera camera;
+    //AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     Gamepad currentGamepad1 = new Gamepad();
     Gamepad currentGamepad2 = new Gamepad();
@@ -28,15 +27,16 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
     int colorMod = 0;
     int posMod = 0;
-    int cycles = 2;
+    //int cycles = 2;
 
-    double speed = .8;
+    double speed = .75;
 
-    //this stuff does not need to be changed
+    //This stuff does not need to be changed
     // Lens intrinsics
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
     // You will need to do your own calibration for other configurations!
+/*
     double fx = 578.272;
     double fy = 578.272;
     double cx = 402.145;
@@ -52,8 +52,7 @@ public class WARHOGAutoPushBot extends LinearOpMode {
     int ID_TAG_OF_INTEREST = 18;
 
     AprilTagDetection tagOfInterest = null;
-
- */
+*/
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,7 +61,6 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         //Intake intake = new Intake(hardwareMap, telemetry);
         //Outtake outtake = new Outtake(hardwareMap, telemetry);
 
-        //intake.runArm(Intake.Height.UPRIGHT);
 
         /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -89,8 +87,8 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         telemetry.setMsTransmissionInterval(50);
 
         //init loop
-        /*while (!isStarted() && !isStopRequested()) {
-            intake.runArm(Intake.Height.STARTSIZING);
+        while (!isStarted() && !isStopRequested()) {
+            //intake.runArm(Intake.Height.STARTSIZING);
             //set up inputs - have previous so that you can check rising edge
             try {
                 previousGamepad1.copy(currentGamepad1);
@@ -111,25 +109,13 @@ public class WARHOGAutoPushBot extends LinearOpMode {
             if (currentGamepad1.x) {
                 startPosColor = StartPosColor.BLUE;
             }
-            if (currentGamepad1.dpad_left) {
-                startPosPosition = StartPosPosition.LEFT;
+            if (currentGamepad1.dpad_down) {
+                startPosPosition = StartPosPosition.BACK;
             }
-            if (currentGamepad1.dpad_right) {
-                startPosPosition = StartPosPosition.RIGHT;
+            if (currentGamepad1.dpad_up) {
+                startPosPosition = StartPosPosition.FRONT;
             }
 
-            if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up){
-                cycles+=1;
-            }
-            if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down){
-                cycles-=1;
-            }
-            if(cycles>5){
-                cycles=5;
-            }
-            if(cycles<-1){
-                cycles=-1;
-            }
 
             if(currentGamepad1.y && !previousGamepad1.y){
                 speed+=.05;
@@ -146,9 +132,9 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
             telemetry.addData("Color", startPosColor);
             telemetry.addData("Position", startPosPosition);
-            telemetry.addData("Cycles", cycles);
             telemetry.addData("Speed", speed);
-            ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
+            /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             //detect apriltags
             if(currentDetections.size() != 0)
@@ -200,7 +186,7 @@ public class WARHOGAutoPushBot extends LinearOpMode {
                     tagToTelemetry(tagOfInterest);
                 }
 
-            }
+            }*/
 
             telemetry.update();
             sleep(20);
@@ -208,8 +194,6 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
 
         // start command just came in
-
-        intake.runArm(Intake.Height.DRIVESIZING);
 
         //set modifier values
         switch (startPosColor){
@@ -221,115 +205,25 @@ public class WARHOGAutoPushBot extends LinearOpMode {
                 break;
         }
         switch (startPosPosition){
-            case LEFT:
+            case FRONT:
                 posMod = -1;
                 break;
-            case RIGHT:
+            case BACK:
                 posMod = 1;
                 break;
         }
 
-        outtake.closeClaw();
-
-        // drive to pole and raise slide
-        drivetrain.MoveForDis(52.5, speed);
-        if(cycles>-1) {
-            drivetrain.rotateToPosition(-43 * posMod - (posMod+1), speed - .25);
-            drivetrain.MoveForDis(-.75, speed);
-            telemetry.addLine("just before slides");
-            telemetry.update();
-            outtake.setHeight(Outtake.Height.HIGH);
-            telemetry.addLine("height added");
-            telemetry.update();
-            sleep(200);
-            outtake.setHeight(1500);
-            outtake.openClaw();
-            outtake.setHeight(Outtake.Height.GROUND);
-            //outtake.run(-1);
-            //drivetrain.MoveForDis(-.5, speed);
-            //drivetrain.MoveForDis(-.75, speed);
-
-            // turn to cone stack
-            //drivetrain.MoveForDis(1, speed);
-
-            telemetry.addLine("Stage 1 complete");
-        }
-        else{
-            cycles = 0;
-        }
-
-
-        for(int i = 0; i < cycles; i++) {
-            //drivetrain.RotateForDegree(-45 * posMod, speed);
-            drivetrain.rotateToPosition(-84 * posMod-2*(posMod-1), speed-.45-.25*(posMod-1));
-            intake.runArm(.16-.0325*i);
-            sleep(400);
-
-            // move backward toward cone stack
-            drivetrain.MoveForDis(-11.5, speed*.75);
-
-            // take another cone
-            intake.closeClaw();
-            intake.changeWristMode(Intake.WristMode.INDEPENDENT);
-            sleep(500);
-            intake.runArm(.4);
-            sleep(500);
-            intake.changeWristMode(Intake.WristMode.MATCHED);
-            intake.runArm(Intake.Height.RETRACTED);
-
-            // turn back
-            drivetrain.MoveForDis(11.5, speed);
-            //sleep(250);
-            intake.openClaw();
-            sleep(500);
-            outtake.closeClaw();
-            //drivetrain.RotateForDegree(45 * posMod, speed);
-            drivetrain.rotateToPosition(-45 * posMod, speed*.75);
-            intake.runArm(Intake.Height.DRIVESIZING);
-            //drivetrain.MoveForDis(.5, speed);
-            //drivetrain.MoveForDis(.75, 0.2);
-            //sleep(250);
-            outtake.setHeight(Outtake.Height.HIGH);
-            telemetry.addLine("height added");
-            telemetry.update();
-            sleep(200);
-            outtake.setHeight(1500);
-            outtake.openClaw();
-            outtake.setHeight(Outtake.Height.GROUND);
-            //outtake.run(-1);
-            if (i < cycles - 1) {
-                //drivetrain.MoveForDis(-.5, speed);
-            }
-        }
-        telemetry.addLine("Stage 2 complete");
+        sleep(1000);
+        pushDrivetrain.MoveForDis(100, .3);
+        //sleep(2000);
+        //pushDrivetrain.RotateForDegree(90, speed-.25);
+        //sleep(1000);
+        //pushDrivetrain.MoveForDis(12,speed);
+        telemetry.addLine("Stage 1 complete");
         telemetry.update();
 
-        // park
-        intake.runArm(Intake.Height.RETRACTED);
-        //drivetrain.RotateForDegree(-45 * posMod, speed);
-        if(tagOfInterest == null || tagOfInterest.id == MIDDLE){
 
-        }else if((tagOfInterest.id-2)*posMod==1){
-            drivetrain.rotateToPosition(-90 * posMod, speed-.25);
-            drivetrain.MoveForDis(-21, speed);
-
-        }else{
-            drivetrain.rotateToPosition(-90 * posMod, speed-.25);
-            drivetrain.MoveForDis(22, speed);
-        }
-
-        //drivetrain.RotateForDegree(90*posMod, speed);
-        drivetrain.rotateToPosition(0, speed-.25);
-        if(tagOfInterest != null && (tagOfInterest.id-2)*posMod==1) {
-            drivetrain.SideMoveForDis(2.5*posMod, speed);
-        }
-        drivetrain.MoveForDis(-12, speed);
-        intake.runArm(Intake.Height.RETRACTED);
-        telemetry.addLine("Stage 3 complete");
-        telemetry.update();
-    }
-
-    void tagToTelemetry(AprilTagDetection detection)
+    /*void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
         telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
@@ -340,28 +234,30 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
 
     }*/
-
         //2023-2024 Autonomous
+        /*
         while (!isStarted() && !isStopRequested()) {
-            RunMotorsForSeconds(1, .2);
-            sleep(3000);
+            //RunMotorsForSeconds(1, .2);
+            sleep(2000);
         }
 
-        //Start Command
+        //When Start Command is Given
         RunMotorsForSeconds(2, .5);
         sleep(2000);
         RunMotorsForSeconds(1, -.5);
-        sleep(3000);
+        //sleep(3000);
 
+        pushDrivetrain.RotateForDegree(90, .3);
+        //RunMotorsForSeconds(2, .5);
         telemetry.addLine("Stage 1 complete");
         telemetry.update();
+        */
 
     }
     private void RunMotorsForSeconds(double secs, double power) throws InterruptedException{
-        PushbotDrivetrain pushdrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
-
-        pushdrivetrain.setMotorPowers(power, power, power,power);
+        PushbotDrivetrain pushDrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
+        pushDrivetrain.setMotorPowers(power, power, power,power);
         sleep((long)(secs*1000));
-        pushdrivetrain.setMotorPowers(0,0,0,0);
+        pushDrivetrain.setMotorPowers(0,0,0,0);
     }
 }
