@@ -21,7 +21,7 @@ public class WARHOGAuto extends LinearOpMode {
     private StartPosColor startPosColor = StartPosColor.RED;
     private enum StartPosColor {RED, BLUE};
     private StartPosPosition startPosPosition = StartPosPosition.FRONT;
-    private enum StartPosPosition{FRONT, BACK};
+    private enum StartPosPosition {FRONT, BACK};
 
     //OpenCvCamera camera;
     //AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -33,9 +33,11 @@ public class WARHOGAuto extends LinearOpMode {
 
     static final double FEET_PER_METER = 3.28084;
 
-    int colorMod = 0;
-    int posMod = 0;
-    int cycles = 2;
+    //int colorMod = 0;
+    //int posMod = 0;
+    //int cycles = 2;
+
+    boolean front=false,back=false,red=false,blue=false;
 
     double speed = .75;
 
@@ -125,7 +127,7 @@ public class WARHOGAuto extends LinearOpMode {
                 startPosPosition = StartPosPosition.FRONT;
             }
 
-            if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up){
+            /*if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up){
                 cycles+=1;
             }
             if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down){
@@ -136,7 +138,7 @@ public class WARHOGAuto extends LinearOpMode {
             }
             if(cycles<-1){
                 cycles=-1;
-            }
+            }*/
 
             if(currentGamepad1.y && !previousGamepad1.y){
                 speed+=.05;
@@ -153,7 +155,7 @@ public class WARHOGAuto extends LinearOpMode {
 
             telemetry.addData("Color", startPosColor);
             telemetry.addData("Position", startPosPosition);
-            telemetry.addData("Cycles", cycles);
+            //telemetry.addData("Cycles", cycles);
             telemetry.addData("Speed", speed);
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -222,29 +224,57 @@ public class WARHOGAuto extends LinearOpMode {
         //set modifier values
         switch (startPosColor){
             case RED:
-                colorMod = 1;
+                //colorMod = 1;
+                red = true;
                 break;
             case BLUE:
-                colorMod = -1;
+                //colorMod = -1;
+                blue = true;
                 break;
         }
         switch (startPosPosition){
             case FRONT:
-                posMod = -1;
+                //posMod = -1;
+                front = true;
                 break;
             case BACK:
-                posMod = 1;
+                //posMod = 1;
+                back = true;
                 break;
         }
 
-        sleep(1000);
-        drivetrain.MoveForDis(100, .3);
-        //sleep(2000);
-        //pushDrivetrain.RotateForDegree(90, speed-.25);
-        //sleep(1000);
-        //pushDrivetrain.MoveForDis(12,speed);
-        telemetry.addLine("Stage 1 complete");
-        telemetry.update();
+        //2023-2024 Autonomous Main Code
+        //Blocks for Start positions
+        if(red&&front){
+            //Eventually set sleep in the beginning to startSleep
+            sleep(1000);
+
+            telemetry.addLine("Park complete");
+            telemetry.update();
+        }
+        else if(red&&back){
+            sleep(1000);
+            drivetrain.MoveForDis(100, .3);
+            //sleep(2000);
+            //pushDrivetrain.RotateForDegree(90, speed-.25);
+            //sleep(1000);
+            //pushDrivetrain.MoveForDis(12,speed);
+            telemetry.addLine("Park complete");
+            telemetry.update();
+        }
+        else if(blue&&front){
+            sleep(1000);
+
+            telemetry.addLine("Park complete");
+            telemetry.update();
+        }
+        else if(blue&&back){
+            sleep(1000);
+
+            telemetry.addLine("Park complete");
+            telemetry.update();
+        }
+
 
         //outtake.closeClaw();
         /*
@@ -358,24 +388,6 @@ public class WARHOGAuto extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
 
     }*/
-        //2023-2024 Autonomous
-        /*
-        while (!isStarted() && !isStopRequested()) {
-            RunMotorsForSeconds(1, .2);
-            sleep(2000);
-        }
-
-        //When Start Command is Given
-        RunMotorsForSeconds(2, .5);
-        sleep(2000);
-        RunMotorsForSeconds(1, -.5);
-        sleep(3000);
-
-        drivetrain.RotateForDegree(90, .3);
-        RunMotorsForSeconds(2, .5);
-        telemetry.addLine("Stage 1 complete");
-        telemetry.update();
-        */
 
     }
     private void RunMotorsForSeconds(double secs, double power) throws InterruptedException{
