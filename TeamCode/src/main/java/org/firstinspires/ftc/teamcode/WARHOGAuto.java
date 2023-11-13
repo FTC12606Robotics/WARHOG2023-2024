@@ -37,9 +37,10 @@ public class WARHOGAuto extends LinearOpMode {
     //int posMod = 0;
     //int cycles = 2;
 
-    boolean front=false,back=false,red=false,blue=false;
+    boolean front=false, back=false, red=false, blue=false; //Bools to set position
 
     double speed = .75;
+    double startSleep = 1; //How many seconds to wait before starting autonomous
 
     //this stuff does not need to be changed
     // Lens intrinsics
@@ -246,14 +247,13 @@ public class WARHOGAuto extends LinearOpMode {
         //2023-2024 Autonomous Main Code
         //Blocks for Start positions
         if(red&&front){
-            //Eventually set sleep in the beginning to startSleep
-            sleep(1000);
+            sleep((long)(startSleep*1000));
 
             telemetry.addLine("Park complete");
             telemetry.update();
         }
         else if(red&&back){
-            sleep(1000);
+            sleep((long)(startSleep*1000));
             drivetrain.MoveForDis(100, .3);
             //sleep(2000);
             //pushDrivetrain.RotateForDegree(90, speed-.25);
@@ -263,13 +263,13 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.update();
         }
         else if(blue&&front){
-            sleep(1000);
+            sleep((long)(startSleep*1000));
 
             telemetry.addLine("Park complete");
             telemetry.update();
         }
         else if(blue&&back){
-            sleep(1000);
+            sleep((long)(startSleep*1000));
 
             telemetry.addLine("Park complete");
             telemetry.update();
