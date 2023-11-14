@@ -39,7 +39,7 @@ public class WARHOGAuto extends LinearOpMode {
 
     boolean front=false, back=false, red=false, blue=false; //Bools to set position
 
-    double speed = .75;
+    double speed = .50;
     double startSleep = 1; //How many seconds to wait before starting autonomous
 
     //this stuff does not need to be changed
@@ -254,11 +254,10 @@ public class WARHOGAuto extends LinearOpMode {
         }
         else if(red&&back){
             sleep((long)(startSleep*1000));
-            drivetrain.MoveForDis(100, .3);
-            //sleep(2000);
-            //pushDrivetrain.RotateForDegree(90, speed-.25);
-            //sleep(1000);
-            //pushDrivetrain.MoveForDis(12,speed);
+            //Turn and Move
+            drivetrain.RotateForDegree(-90, speed-.25);
+            drivetrain.MoveForDis(48, .25);
+
             telemetry.addLine("Park complete");
             telemetry.update();
         }
@@ -270,6 +269,9 @@ public class WARHOGAuto extends LinearOpMode {
         }
         else if(blue&&back){
             sleep((long)(startSleep*1000));
+            //Turn and Move
+            drivetrain.RotateForDegree(-90, speed-.25);
+            drivetrain.MoveForDis(48, .25);
 
             telemetry.addLine("Park complete");
             telemetry.update();

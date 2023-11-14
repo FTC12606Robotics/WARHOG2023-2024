@@ -27,11 +27,10 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
     //int colorMod = 0;
     //int posMod = 0;
-    //int cycles = 2;
 
     boolean front=false, back=false, red=false, blue=false; //Bools to set position
 
-    double speed = .75;
+    double speed = .50;
     double startSleep = 1; //How many seconds to wait before starting autonomous
 
     //This stuff does not need to be changed
@@ -230,11 +229,10 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         }
         else if(red&&back){
             sleep((long)(startSleep*1000));
-            pushDrivetrain.MoveForDis(100, .3);
-            //sleep(2000);
-            //pushDrivetrain.RotateForDegree(90, speed-.25);
-            //sleep(1000);
-            //pushDrivetrain.MoveForDis(12,speed);
+            //Turn and Move
+            pushDrivetrain.RotateForDegree(-90, speed-.25);
+            pushDrivetrain.MoveForDis(48, .25);
+
             telemetry.addLine("Park complete");
             telemetry.update();
         }
@@ -246,6 +244,9 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         }
         else if(blue&&back){
             sleep((long)(startSleep*1000));
+            //Turn and Move
+            pushDrivetrain.RotateForDegree(-90, speed-.25);
+            pushDrivetrain.MoveForDis(48, .25);
 
             telemetry.addLine("Park complete");
             telemetry.update();
