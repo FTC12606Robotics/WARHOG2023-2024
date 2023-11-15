@@ -94,6 +94,7 @@ public class PushbotDrivetrain {
         BOT, FIELD
     }
 
+    //This method is used to create an array of directions for the motors based on a set movement direction
     private int[] DetermineDirection(DirectionMode mode){
         int[] directions = new int[]{1, 1, 1, 1};
 
@@ -146,6 +147,7 @@ public class PushbotDrivetrain {
         }
     }
 
+    //Method takes a movement mode (direction) and moves the motors
     public void move(DirectionMode mode, double pow) {
 
         int[] directions = DetermineDirection(mode);

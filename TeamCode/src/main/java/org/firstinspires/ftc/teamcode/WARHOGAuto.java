@@ -141,9 +141,24 @@ public class WARHOGAuto extends LinearOpMode {
                 speed=.4;
             }
 
+            //Override startSleep with driver hub
+            if(currentGamepad1.dpad_right && !previousGamepad1.dpad_right){
+                startSleep+=.5;
+            }
+            if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left){
+                startSleep-=.5;
+            }
+            if(startSleep>20){
+                startSleep=20;
+            }
+            if(startSleep<1){
+                startSleep=1;
+            }
+
             telemetry.addData("Color", startPosColor);
             telemetry.addData("Position", startPosPosition);
             telemetry.addData("Speed", speed);
+            telemetry.addData("startSleep", startSleep);
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -231,7 +246,7 @@ public class WARHOGAuto extends LinearOpMode {
         //2023-2024 Autonomous Main Code
         //Blocks to run for different start positions
         if(red&&front){
-            sleep((long)((startSleep+4)*1000));
+            sleep((long)((startSleep)*1000));
             //Retract arm
             intake.runArm(intake.armMax);
 
@@ -252,7 +267,7 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.update();
         }
         else if(blue&&front){
-            sleep((long)((startSleep+4)*1000));
+            sleep((long)((startSleep)*1000));
             //Retract arm
             intake.runArm(intake.armMax);
 
