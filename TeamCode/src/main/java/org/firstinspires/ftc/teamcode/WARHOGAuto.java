@@ -72,7 +72,6 @@ public class WARHOGAuto extends LinearOpMode {
         Intake intake = new Intake(hardwareMap, telemetry);
         Outtake outtake = new Outtake(hardwareMap, telemetry);
 
-        //intake.runArm(Intake.Height.UPRIGHT);
 
         /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -128,19 +127,7 @@ public class WARHOGAuto extends LinearOpMode {
                 startPosPosition = StartPosPosition.FRONT;
             }
 
-            /*if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up){
-                cycles+=1;
-            }
-            if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down){
-                cycles-=1;
-            }
-            if(cycles>5){
-                cycles=5;
-            }
-            if(cycles<-1){
-                cycles=-1;
-            }*/
-
+            //Override speed with driver hub
             if(currentGamepad1.y && !previousGamepad1.y){
                 speed+=.05;
             }
@@ -156,7 +143,6 @@ public class WARHOGAuto extends LinearOpMode {
 
             telemetry.addData("Color", startPosColor);
             telemetry.addData("Position", startPosPosition);
-            //telemetry.addData("Cycles", cycles);
             telemetry.addData("Speed", speed);
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -218,11 +204,9 @@ public class WARHOGAuto extends LinearOpMode {
         }
 
 
-        // start command just came in
+        //Start command just came in
 
-        //intake.runArm(Intake.Height.DRIVESIZING);
-
-        //set modifier values
+        //Set modifier values
         switch (startPosColor){
             case RED:
                 //colorMod = 1;
@@ -245,9 +229,15 @@ public class WARHOGAuto extends LinearOpMode {
         }
 
         //2023-2024 Autonomous Main Code
-        //Blocks for Start positions
+        //Blocks to run for different start positions
         if(red&&front){
-            sleep((long)(startSleep*1000));
+            sleep((long)((startSleep+4)*1000));
+            //Retract arm
+            intake.runArm(intake.armMax);
+
+            //Turn and Move
+            drivetrain.RotateForDegree(90, speed-.25);
+            drivetrain.MoveForDis(96, speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
@@ -255,14 +245,20 @@ public class WARHOGAuto extends LinearOpMode {
         else if(red&&back){
             sleep((long)(startSleep*1000));
             //Turn and Move
-            drivetrain.RotateForDegree(-90, speed-.25);
-            drivetrain.MoveForDis(48, .25);
+            drivetrain.RotateForDegree(90, speed-.25);
+            drivetrain.MoveForDis(48, speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
         }
         else if(blue&&front){
-            sleep((long)(startSleep*1000));
+            sleep((long)((startSleep+4)*1000));
+            //Retract arm
+            intake.runArm(intake.armMax);
+
+            //Turn and Move
+            drivetrain.RotateForDegree(-90, speed-.25);
+            drivetrain.MoveForDis(96, speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
@@ -271,14 +267,13 @@ public class WARHOGAuto extends LinearOpMode {
             sleep((long)(startSleep*1000));
             //Turn and Move
             drivetrain.RotateForDegree(-90, speed-.25);
-            drivetrain.MoveForDis(48, .25);
+            drivetrain.MoveForDis(48, speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
         }
 
 
-        //outtake.closeClaw();
         /*
 
         // drive to pole and raise slide

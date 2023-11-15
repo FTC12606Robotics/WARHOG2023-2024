@@ -118,7 +118,7 @@ public class WARHOGAutoPushBot extends LinearOpMode {
                 startPosPosition = StartPosPosition.FRONT;
             }
 
-
+            //Override speed with driver hub
             if(currentGamepad1.y && !previousGamepad1.y){
                 speed+=.05;
             }
@@ -220,9 +220,12 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         }
 
         //2023-2024 Autonomous Main Code
-        //Blocks for Start positions
+        //Blocks to run for different start positions
         if(red&&front){
-            sleep((long)(startSleep*1000));
+            sleep((long)((startSleep+4)*1000));
+            //Turn and Move
+            pushDrivetrain.RotateForDegree(90, speed-.25);
+            pushDrivetrain.MoveForDis(96, speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
@@ -237,7 +240,10 @@ public class WARHOGAutoPushBot extends LinearOpMode {
             telemetry.update();
         }
         else if(blue&&front){
-            sleep((long)(startSleep*1000));
+            sleep((long)((startSleep+4)*1000));
+            //Turn and Move
+            pushDrivetrain.RotateForDegree(90, speed-.25);
+            pushDrivetrain.MoveForDis(96, speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
