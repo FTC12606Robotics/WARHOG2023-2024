@@ -39,6 +39,8 @@ public class WARHOGAuto extends LinearOpMode {
 
     boolean front=false, back=false, red=false, blue=false; //Bools to set position
 
+    boolean targetMidPos = false; //To set whether to park in the corner of the backstage or middle of it
+
     double speed = .50;
     double startSleep = 1; //How many seconds to wait before starting autonomous
 
@@ -155,10 +157,17 @@ public class WARHOGAuto extends LinearOpMode {
                 startSleep=1;
             }
 
+            // To set where to park in backstage
+            //***Need to test and maybe set a different button***
+            if (currentGamepad1.right_bumper) {
+                targetMidPos = true;
+            }
+
             telemetry.addData("Color", startPosColor);
             telemetry.addData("Position", startPosPosition);
             telemetry.addData("Speed", speed);
             telemetry.addData("startSleep", startSleep);
+            telemetry.addData("Target Pos.", targetMidPos);
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -246,7 +255,14 @@ public class WARHOGAuto extends LinearOpMode {
         //2023-2024 Autonomous Main Code
         //Blocks to run for different start positions
         if(red&&front){
+            //Wait and then move off the wall
             sleep((long)((startSleep)*1000));
+            drivetrain.MoveForDis(4,speed);
+            //Check if we are going to the backstage middle
+            if(targetMidPos){
+                drivetrain.MoveForDis(48,speed);
+            }
+
             //Retract arm
             intake.runArm(intake.armMax);
 
@@ -258,7 +274,14 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.update();
         }
         else if(red&&back){
+            //Wait and then move off the wall
             sleep((long)(startSleep*1000));
+            drivetrain.MoveForDis(4,speed);
+            //Check if we are going to the backstage middle
+            if(targetMidPos){
+                drivetrain.MoveForDis(48,speed);
+            }
+
             //Turn and Move
             drivetrain.RotateForDegree(90, speed-.25);
             drivetrain.MoveForDis(48, speed);
@@ -267,7 +290,14 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.update();
         }
         else if(blue&&front){
+            //Wait and then move off the wall
             sleep((long)((startSleep)*1000));
+            drivetrain.MoveForDis(4,speed);
+            //Check if we are going to the backstage middle
+            if(targetMidPos){
+                drivetrain.MoveForDis(48,speed);
+            }
+
             //Retract arm
             intake.runArm(intake.armMax);
 
@@ -279,7 +309,14 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.update();
         }
         else if(blue&&back){
+            //Wait and then move off the wall
             sleep((long)(startSleep*1000));
+            drivetrain.MoveForDis(4,speed);
+            //Check if we are going to the backstage middle
+            if(targetMidPos){
+                drivetrain.MoveForDis(48,speed);
+            }
+
             //Turn and Move
             drivetrain.RotateForDegree(-90, speed-.25);
             drivetrain.MoveForDis(48, speed);
