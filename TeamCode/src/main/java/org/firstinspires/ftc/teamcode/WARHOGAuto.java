@@ -160,14 +160,19 @@ public class WARHOGAuto extends LinearOpMode {
             // To set where to park in backstage
             //***Need to test and maybe set a different button***
             if (currentGamepad1.right_bumper) {
-                targetMidPos = true;
+                if(targetMidPos){
+                    targetMidPos = false;
+                }
+                else if(!targetMidPos){
+                    targetMidPos = true;
+                }
             }
 
             telemetry.addData("Color", startPosColor);
             telemetry.addData("Position", startPosPosition);
             telemetry.addData("Speed", speed);
             telemetry.addData("startSleep", startSleep);
-            telemetry.addData("Target Pos.", targetMidPos);
+            telemetry.addData("Target Middle Pos.", targetMidPos);
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -258,9 +263,10 @@ public class WARHOGAuto extends LinearOpMode {
             //Wait and then move off the wall
             sleep((long)((startSleep)*1000));
             drivetrain.MoveForDis(4,speed);
+
             //Check if we are going to the backstage middle
             if(targetMidPos){
-                drivetrain.MoveForDis(48,speed);
+                drivetrain.MoveForDis(51,speed);
             }
 
             //Retract arm
@@ -277,9 +283,10 @@ public class WARHOGAuto extends LinearOpMode {
             //Wait and then move off the wall
             sleep((long)(startSleep*1000));
             drivetrain.MoveForDis(4,speed);
+
             //Check if we are going to the backstage middle
             if(targetMidPos){
-                drivetrain.MoveForDis(48,speed);
+                drivetrain.MoveForDis(51,speed);
             }
 
             //Turn and Move
@@ -293,9 +300,10 @@ public class WARHOGAuto extends LinearOpMode {
             //Wait and then move off the wall
             sleep((long)((startSleep)*1000));
             drivetrain.MoveForDis(4,speed);
+
             //Check if we are going to the backstage middle
             if(targetMidPos){
-                drivetrain.MoveForDis(48,speed);
+                drivetrain.MoveForDis(51,speed);
             }
 
             //Retract arm
@@ -312,9 +320,10 @@ public class WARHOGAuto extends LinearOpMode {
             //Wait and then move off the wall
             sleep((long)(startSleep*1000));
             drivetrain.MoveForDis(4,speed);
+
             //Check if we are going to the backstage middle
             if(targetMidPos){
-                drivetrain.MoveForDis(48,speed);
+                drivetrain.MoveForDis(51,speed);
             }
 
             //Turn and Move
