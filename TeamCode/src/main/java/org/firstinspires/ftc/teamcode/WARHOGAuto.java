@@ -276,6 +276,9 @@ public class WARHOGAuto extends LinearOpMode {
             drivetrain.RotateForDegree(90, speed-.25);
             drivetrain.MoveForDis(96, speed);
 
+            //Move so not touching pixels hopefully
+            drivetrain.MoveForDis(-6,speed);
+
             telemetry.addLine("Park complete");
             telemetry.update();
         }
@@ -292,6 +295,9 @@ public class WARHOGAuto extends LinearOpMode {
             //Turn and Move
             drivetrain.RotateForDegree(90, speed-.25);
             drivetrain.MoveForDis(48, speed);
+
+            //Move so not touching pixels hopefully
+            drivetrain.MoveForDis(-6,speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
@@ -313,6 +319,9 @@ public class WARHOGAuto extends LinearOpMode {
             drivetrain.RotateForDegree(-90, speed-.25);
             drivetrain.MoveForDis(96, speed);
 
+            //Move so not touching pixels hopefully
+            drivetrain.MoveForDis(-6,speed);
+
             telemetry.addLine("Park complete");
             telemetry.update();
         }
@@ -329,6 +338,9 @@ public class WARHOGAuto extends LinearOpMode {
             //Turn and Move
             drivetrain.RotateForDegree(-90, speed-.25);
             drivetrain.MoveForDis(48, speed);
+
+            //Move so not touching pixels hopefully
+            drivetrain.MoveForDis(-6,speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();

@@ -263,6 +263,9 @@ public class WARHOGAutoPushBot extends LinearOpMode {
             pushDrivetrain.RotateForDegree(90, speed-.25);
             pushDrivetrain.MoveForDis(96, speed);
 
+            //Move so not touching pixels hopefully
+            pushDrivetrain.MoveForDis(-6,speed);
+
             telemetry.addLine("Park complete");
             telemetry.update();
         }
@@ -279,6 +282,9 @@ public class WARHOGAutoPushBot extends LinearOpMode {
             //Turn and Move
             pushDrivetrain.RotateForDegree(-90, speed-.25);
             pushDrivetrain.MoveForDis(48, .25);
+
+            //Move so not touching pixels hopefully
+            pushDrivetrain.MoveForDis(-6,speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
@@ -297,6 +303,9 @@ public class WARHOGAutoPushBot extends LinearOpMode {
             pushDrivetrain.RotateForDegree(90, speed-.25);
             pushDrivetrain.MoveForDis(96, speed);
 
+            //Move so not touching pixels hopefully
+            pushDrivetrain.MoveForDis(-6,speed);
+
             telemetry.addLine("Park complete");
             telemetry.update();
         }
@@ -313,6 +322,9 @@ public class WARHOGAutoPushBot extends LinearOpMode {
             //Turn and Move
             pushDrivetrain.RotateForDegree(-90, speed-.25);
             pushDrivetrain.MoveForDis(48, .25);
+
+            //Move so not touching pixels hopefully
+            pushDrivetrain.MoveForDis(-6,speed);
 
             telemetry.addLine("Park complete");
             telemetry.update();
