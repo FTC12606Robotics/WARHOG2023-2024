@@ -19,9 +19,15 @@ public class WARHOGAuto extends LinearOpMode {
     public WARHOGAuto() throws InterruptedException {}
 
     private StartPosColor startPosColor = StartPosColor.RED;
-    private enum StartPosColor {RED, BLUE};
+    private enum StartPosColor {RED, BLUE}
     private StartPosPosition startPosPosition = StartPosPosition.FRONT;
-    private enum StartPosPosition {FRONT, BACK};
+    private enum StartPosPosition {FRONT, BACK}
+    private ParkPos parkPos = ParkPos.NO;
+    private enum ParkPos {NO, CORNER, MIDDLE} //For where to park if at all
+    private RandomPos randomPos = RandomPos.NULL;
+    private enum RandomPos {NULL, LEFT, CENTER, RIGHT} //For what position the randomization is in
+    private ActionCombination actionCombination = ActionCombination.PARK_ONLY;
+    private enum ActionCombination {PARK_ONLY/*, BOARD_ONLY*/, SPIKE_ONLY, PARK_BOARD, NONE/*, SPIKE_BOARD*/, PARK_SPIKE, PARK_BOARD_SPIKE}
 
     //OpenCvCamera camera;
     //AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -39,7 +45,11 @@ public class WARHOGAuto extends LinearOpMode {
 
     boolean front=false, back=false, red=false, blue=false; //Bools to set position
 
+    //targetMidPos is for the legacy code
     boolean targetMidPos = false; //To set whether to park in the corner of the backstage or middle of it
+    boolean willPark = false; //for interior code use for if the robot will park
+    boolean willSpike = false; //for interior code use for if the robot will place a pixel on a spike
+    boolean willBoard = false; //for interior code use for if the robot will place a pixel on the backdrop
 
     double speed = .50;
     double startSleep = 1; //How many seconds to wait before starting autonomous
@@ -72,8 +82,6 @@ public class WARHOGAuto extends LinearOpMode {
 
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         Intake intake = new Intake(hardwareMap, telemetry);
-        Outtake outtake = new Outtake(hardwareMap, telemetry);
-
 
         /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -139,8 +147,8 @@ public class WARHOGAuto extends LinearOpMode {
             if(speed>1){
                 speed=1;
             }
-            if(speed<.4){
-                speed=.4;
+            if(speed<.3){
+                speed=.3;
             }
 
             //Override startSleep with driver hub
@@ -153,18 +161,79 @@ public class WARHOGAuto extends LinearOpMode {
             if(startSleep>20){
                 startSleep=20;
             }
-            if(startSleep<1){
-                startSleep=1;
+            if(startSleep<0){
+                startSleep=0;
             }
 
-            // To set where to park in backstage
+            //To set where to park in backstage
             //***Need to test and maybe set a different button***
-            if (currentGamepad1.right_bumper) {
-                if(targetMidPos){
+            if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
+                /*if(targetMidPos){
                     targetMidPos = false;
                 }
                 else if(!targetMidPos){
                     targetMidPos = true;
+                }*/
+                if(parkPos == parkPos.MIDDLE){
+                    parkPos = parkPos.CORNER;
+                }
+                else if (parkPos == parkPos.CORNER){
+                    parkPos = parkPos.NO;
+                }
+                else if (parkPos == parkPos.NO){
+                    parkPos = parkPos.MIDDLE;
+                }
+            }
+
+            //Go through different combinations of things to do and set bools
+            if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
+                if(actionCombination == actionCombination.PARK_ONLY){
+                    actionCombination = actionCombination.SPIKE_ONLY;
+                    willPark = false;
+                    willBoard = false;
+                    willSpike = true;
+                }
+                /*else if(actionCombination == actionCombination.BOARD_ONLY){
+                    actionCombination = actionCombination.SPIKE_ONLY;
+                    willPark = false;
+                    willBoard = false;
+                    willSpike = true;
+                }*/
+                else if(actionCombination == actionCombination.SPIKE_ONLY){
+                    actionCombination = actionCombination.PARK_BOARD;
+                    willPark = true;
+                    willBoard = true;
+                    willSpike = false;
+                }
+                else if(actionCombination == actionCombination.PARK_BOARD){
+                    actionCombination = actionCombination.PARK_SPIKE;
+                    willPark = true;
+                    willBoard = false;
+                    willSpike = true;
+                }
+                /*else if(actionCombination == actionCombination.SPIKE_BOARD){
+                    actionCombination = actionCombination.PARK_SPIKE;
+                    willPark = true;
+                    willBoard = false;
+                    willSpike = true;
+                }*/
+                else if(actionCombination == actionCombination.PARK_SPIKE){
+                    actionCombination = actionCombination.PARK_BOARD_SPIKE;
+                    willPark = true;
+                    willBoard = true;
+                    willSpike = true;
+                }
+                else if(actionCombination == actionCombination.PARK_BOARD_SPIKE){
+                    actionCombination = actionCombination.NONE;
+                    willPark = false;
+                    willBoard = false;
+                    willSpike = false;
+                }
+                else if(actionCombination == actionCombination.NONE){
+                    actionCombination = actionCombination.PARK_ONLY;
+                    willPark = true;
+                    willBoard = false;
+                    willSpike = false;
                 }
             }
 
@@ -172,7 +241,14 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.addData("Position", startPosPosition);
             telemetry.addData("Speed", speed);
             telemetry.addData("startSleep", startSleep);
-            telemetry.addData("Target Middle Pos.", targetMidPos);
+            //telemetry.addData("Target Middle Pos.", targetMidPos);
+            telemetry.addData("Park Pos.", parkPos);
+            telemetry.addData("Combination", actionCombination);
+            telemetry.addLine();
+            telemetry.addData("Will Park", willPark);
+            telemetry.addData("Will Board", willBoard);
+            telemetry.addData("Will Spike", willSpike);
+            telemetry.addData("Random Pos.", randomPos);
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -257,11 +333,16 @@ public class WARHOGAuto extends LinearOpMode {
                 break;
         }
 
-        //2023-2024 Autonomous Main Code
+        /*
+        //2023-2024 Autonomous Legacy Main Code:
+
+        //Wait
+        sleep((long)((startSleep)*1000));
+
         //Blocks to run for different start positions
         if(red&&front){
             //Wait and then move off the wall
-            sleep((long)((startSleep)*1000));
+            //sleep((long)((startSleep)*1000));
             drivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
@@ -269,10 +350,10 @@ public class WARHOGAuto extends LinearOpMode {
                 drivetrain.MoveForDis(51,speed);
             }
 
-            //Retract arm
+            //Retract arm to go under gate
             intake.runArm(intake.armMax);
 
-            //Turn and Move
+            //Turn and Move to the backstage
             drivetrain.RotateForDegree(90, speed-.25);
             drivetrain.MoveForDis(96, speed);
 
@@ -284,7 +365,7 @@ public class WARHOGAuto extends LinearOpMode {
         }
         else if(red&&back){
             //Wait and then move off the wall
-            sleep((long)(startSleep*1000));
+            //sleep((long)(startSleep*1000));
             drivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
@@ -292,7 +373,7 @@ public class WARHOGAuto extends LinearOpMode {
                 drivetrain.MoveForDis(51,speed);
             }
 
-            //Turn and Move
+            //Turn and Move to the backstage
             drivetrain.RotateForDegree(90, speed-.25);
             drivetrain.MoveForDis(48, speed);
 
@@ -304,7 +385,7 @@ public class WARHOGAuto extends LinearOpMode {
         }
         else if(blue&&front){
             //Wait and then move off the wall
-            sleep((long)((startSleep)*1000));
+            //sleep((long)((startSleep)*1000));
             drivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
@@ -312,10 +393,10 @@ public class WARHOGAuto extends LinearOpMode {
                 drivetrain.MoveForDis(51,speed);
             }
 
-            //Retract arm
+            //Retract arm to go under the gate
             intake.runArm(intake.armMax);
 
-            //Turn and Move
+            //Turn and Move to the backstage
             drivetrain.RotateForDegree(-90, speed-.25);
             drivetrain.MoveForDis(96, speed);
 
@@ -327,7 +408,7 @@ public class WARHOGAuto extends LinearOpMode {
         }
         else if(blue&&back){
             //Wait and then move off the wall
-            sleep((long)(startSleep*1000));
+            //sleep((long)((startSleep)*1000));
             drivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
@@ -335,14 +416,228 @@ public class WARHOGAuto extends LinearOpMode {
                 drivetrain.MoveForDis(51,speed);
             }
 
-            //Turn and Move
+            //Retract arm to go under the gate
+            intake.runArm(intake.armMax);
+
+            //Turn and Move to the backstage
             drivetrain.RotateForDegree(-90, speed-.25);
+            drivetrain.MoveForDis(96, speed);
+
+            //Move so not touching pixels hopefully
+            drivetrain.MoveForDis(-6,speed);
+
+            telemetry.addLine("Park complete");
+            telemetry.update();
+        }
+        */
+
+
+        //2023-2024 Autonomous Main Code:
+
+        //Wait
+        sleep((long)((startSleep)*1000));
+
+        //Blocks to run for different start positions
+        if(red&&front){
+            //Wait and then move off the wall
+            //sleep((long)((startSleep)*1000));
+            drivetrain.MoveForDis(4,speed);
+
+            //Check if we are going to the backstage middle
+            if(parkPos == parkPos.MIDDLE){
+                drivetrain.MoveForDis(51,speed);
+            }
+
+            //Retract arm to go under gate
+            intake.runArm(intake.armMax);
+
+            //Turn and Move to the backstage
+            drivetrain.RotateForDegree(90, speed-.25);
+            drivetrain.MoveForDis(96, speed);
+
+            //Move so not touching pixels hopefully
+            drivetrain.MoveForDis(-6,speed);
+
+            telemetry.addLine("Park complete");
+            telemetry.update();
+        }
+        else if(red&&back){
+            //Wait and then move off the wall
+            //sleep((long)(startSleep*1000));
+            drivetrain.MoveForDis(4,speed);
+
+            //Check if we are going to the backstage middle
+            if(parkPos == parkPos.MIDDLE){
+                drivetrain.MoveForDis(51,speed);
+            }
+
+            //Turn and Move to the backstage
+            drivetrain.RotateForDegree(90, speed-.25);
             drivetrain.MoveForDis(48, speed);
 
             //Move so not touching pixels hopefully
             drivetrain.MoveForDis(-6,speed);
 
             telemetry.addLine("Park complete");
+            telemetry.update();
+        }
+        else if(blue&&front){
+            //Wait and then move off the wall
+            //sleep((long)((startSleep)*1000));
+            drivetrain.MoveForDis(4,speed);
+
+            //Check if we are going to the backstage middle
+            if(parkPos == parkPos.MIDDLE){
+                drivetrain.MoveForDis(51,speed);
+            }
+
+            //Retract arm to go under the gate
+            intake.runArm(intake.armMax);
+
+            //Turn and Move to the backstage
+            drivetrain.RotateForDegree(-90, speed-.25);
+            drivetrain.MoveForDis(96, speed);
+
+            //Move so not touching pixels hopefully
+            drivetrain.MoveForDis(-6,speed);
+
+            telemetry.addLine("Park complete");
+            telemetry.update();
+        }
+        else if(blue&&back){
+            //Wait and then move off the wall
+            //sleep((long)(startSleep*1000));
+            drivetrain.MoveForDis(4,speed);
+
+            //1 of 6: Only Park
+            if(actionCombination == actionCombination.PARK_ONLY){
+                //To go to the middle of the backstage
+                if(parkPos == parkPos.MIDDLE){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(-90, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the corner of the backstage
+                else if(parkPos == parkPos.CORNER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(-90, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+            }
+
+            /*2 of 8: Only Board
+            if(actionCombination == actionCombination.BOARD_ONLY){
+                //***Go to board***
+                //***Based on random pos place pixel on board***
+                //***Move out of the way***
+            }*/
+
+            //2 of 6: Only Spike
+            if(actionCombination == actionCombination.SPIKE_ONLY){
+                //***Place pixel on spike***
+            }
+
+            //3 of 6: Park and Board
+            if(actionCombination == actionCombination.PARK_BOARD){
+                //To go to the middle of the backstage
+                if(parkPos == parkPos.MIDDLE){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(-90, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the corner of the backstage
+                else if(parkPos == parkPos.CORNER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(-90, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+            }
+
+            /*5 of 8: Spike and Board
+            if(actionCombination == actionCombination.SPIKE_BOARD){
+                //***Place on Spike***
+                //***Move to Board***
+                //***Place on Board***
+                //***Move out of the way/park***
+            }*/
+
+            //4 of 6: Park and Spike
+            if(actionCombination == actionCombination.PARK_SPIKE){
+                //***Place on spike***
+                //***
+                //To go to the middle of the backstage
+                if(parkPos == parkPos.MIDDLE){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(-90, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the corner of the backstage
+                else if(parkPos == parkPos.CORNER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(-90, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+            }
+
+            //5 of 6: Park, Board, and Spike
+            if(actionCombination == actionCombination.PARK_BOARD_SPIKE){
+                //***Place on spike***
+                //***If not center and need not go to middle to park, realign and go to board***
+                //***Place on board***
+                //***Move away/park***
+
+            }
+
+            //6 of 6: NONE
+            if(actionCombination == actionCombination.NONE){
+                telemetry.addLine("Doing Nothing");
+            }
+
+
+            //To not park at all, might take out the second statement for optimization
+            else if(!willPark && parkPos == parkPos.NO){
+                telemetry.addLine("Not Parking");
+            }
+
             telemetry.update();
         }
 
@@ -460,10 +755,5 @@ public class WARHOGAuto extends LinearOpMode {
     }*/
 
     }
-    private void RunMotorsForSeconds(double secs, double power) throws InterruptedException{
-        Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
-        drivetrain.setMotorPowers(power, power, power,power);
-        sleep((long)(secs*1000));
-        drivetrain.setMotorPowers(0,0,0,0);
-    }
+
 }

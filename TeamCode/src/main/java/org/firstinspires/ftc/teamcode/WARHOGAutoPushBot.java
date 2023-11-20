@@ -62,7 +62,6 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
         PushbotDrivetrain pushDrivetrain = new PushbotDrivetrain(hardwareMap, telemetry);
         //Intake intake = new Intake(hardwareMap, telemetry);
-        //Outtake outtake = new Outtake(hardwareMap, telemetry);
 
 
         /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -149,7 +148,7 @@ public class WARHOGAutoPushBot extends LinearOpMode {
 
             // To set where to park in backstage
             //***Need to test and maybe set a different button***
-            if (currentGamepad1.right_bumper) {
+            if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
                 if(targetMidPos){
                     targetMidPos = false;
                 }
@@ -248,10 +247,14 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         }
 
         //2023-2024 Autonomous Main Code
+
+        //Wait
+        sleep((long)((startSleep)*1000));
+
         //Blocks to run for different start positions
         if(red&&front){
             //Wait and then move off the wall
-            sleep((long)((startSleep)*1000));
+            //sleep((long)((startSleep)*1000));
             pushDrivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
@@ -271,7 +274,7 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         }
         else if(red&&back){
             //Wait and then move off the wall
-            sleep((long)(startSleep*1000));
+            //sleep((long)(startSleep*1000));
             pushDrivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
@@ -291,7 +294,7 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         }
         else if(blue&&front){
             //Wait and then move off the wall
-            sleep((long)((startSleep)*1000));
+            //sleep((long)((startSleep)*1000));
             pushDrivetrain.MoveForDis(4,speed);
             
             //Check if we are going to the backstage middle
@@ -311,7 +314,7 @@ public class WARHOGAutoPushBot extends LinearOpMode {
         }
         else if(blue&&back){
             //Wait and then move off the wall
-            sleep((long)(startSleep*1000));
+            //sleep((long)(startSleep*1000));
             pushDrivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
