@@ -22,7 +22,7 @@ public class WARHOGAuto extends LinearOpMode {
     private enum StartPosColor {RED, BLUE}
     private StartPosPosition startPosPosition = StartPosPosition.FRONT;
     private enum StartPosPosition {FRONT, BACK}
-    private ParkPos parkPos = ParkPos.NO;
+    private ParkPos parkPos = ParkPos.CORNER;
     private enum ParkPos {NO, CORNER, MIDDLE} //For where to park if at all
     private RandomPos randomPos = RandomPos.NULL;
     private enum RandomPos {NULL, LEFT, CENTER, RIGHT} //For what position the randomization is in
@@ -303,6 +303,9 @@ public class WARHOGAuto extends LinearOpMode {
                 }
 
             }*/
+
+            //Find and set which random pos. the pixel/gameobject is in.
+
 
             telemetry.update();
             sleep(20);

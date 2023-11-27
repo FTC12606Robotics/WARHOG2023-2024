@@ -389,9 +389,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             //open/close the outtake claw
             if(toggleOuttakeClaw){
                 outtake.toggleClaw();
-                /*if(!stationary) {
-                    armpos = intake.runArm(Intake.Height.UPRIGHT);
-                }*/
                 telemetry.addLine("Toggle OuttakeClaw");
             }
 
