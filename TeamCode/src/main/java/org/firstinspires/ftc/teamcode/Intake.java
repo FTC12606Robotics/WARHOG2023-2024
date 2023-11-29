@@ -62,7 +62,7 @@ public class Intake {
                     runWrist(newPos + (.3-newPos)/.3*endMod);
             }
             else {
-                runWrist(newPos);
+                runWrist(newPos-.02);
             }
         }
 
