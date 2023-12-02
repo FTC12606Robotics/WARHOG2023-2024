@@ -10,6 +10,10 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+import org.opencv.core.Mat;
+import org.opencv.core.Core;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 
@@ -29,8 +33,10 @@ public class WARHOGAuto extends LinearOpMode {
     private ActionCombination actionCombination = ActionCombination.PARK_ONLY;
     private enum ActionCombination {PARK_ONLY/*, BOARD_ONLY*/, SPIKE_ONLY, PARK_BOARD, NONE/*, SPIKE_BOARD*/, PARK_SPIKE, PARK_BOARD_SPIKE}
 
-    //OpenCvCamera camera;
+    OpenCvCamera camera;
     //AprilTagDetectionPipeline aprilTagDetectionPipeline;
+    ObjectDetectionPipeline objectDetectionPipeline;
+
 
     Gamepad currentGamepad1 = new Gamepad();
     Gamepad currentGamepad2 = new Gamepad();
@@ -83,11 +89,13 @@ public class WARHOGAuto extends LinearOpMode {
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         Intake intake = new Intake(hardwareMap, telemetry);
 
-        /*int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+        //aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+        objectDetectionPipeline = new ObjectDetectionPipeline();
 
-        camera.setPipeline(aprilTagDetectionPipeline);
+        //camera.setPipeline(aprilTagDetectionPipeline);
+        camera.setPipeline(objectDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -99,11 +107,14 @@ public class WARHOGAuto extends LinearOpMode {
             @Override
             public void onError(int errorCode)
             {
+                telemetry.addLine("Camera Failed to setup");
+                telemetry.update();
 
+                //To cover my butt, but it might come back to bite my butt
+                randomPos = randomPos.NULL;
             }
         });
 
-         */
 
         telemetry.setMsTransmissionInterval(50);
 
@@ -234,6 +245,22 @@ public class WARHOGAuto extends LinearOpMode {
                     willPark = true;
                     willBoard = false;
                     willSpike = false;
+                }
+            }
+
+            //Manually set the random pos for testing and/or if camera doesn't work
+            if (currentGamepad1.right_stick_button && !previousGamepad1.right_stick_button){
+                if (randomPos == randomPos.NULL){
+                    randomPos = randomPos.LEFT;
+                }
+                else if (randomPos == randomPos.LEFT){
+                    randomPos = randomPos.CENTER;
+                }
+                else if (randomPos == randomPos.CENTER){
+                    randomPos = randomPos.RIGHT;
+                }
+                else if (randomPos == randomPos.RIGHT){
+                    randomPos = randomPos.NULL;
                 }
             }
 
@@ -556,7 +583,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                 //***Run arm to place spike***
                 intake.runArm(.10);
-                sleep(2000);
+                sleep(1000);
 
                 //***Open claw, retract arm***
                 intake.openClaw();
@@ -794,5 +821,43 @@ public class WARHOGAuto extends LinearOpMode {
     }*/
 
     }
+}
 
+class ObjectDetectionPipeline extends OpenCvPipeline{
+
+    Mat YCrCb = new Mat();
+    Mat Y = new Mat();
+    int avg;
+
+
+    /*
+     * This function takes the RGB frame, converts to YCrCb,
+     * and extracts the Y channel to the 'Y' variable
+     */
+    void inputToY(Mat input) {
+        Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
+        ArrayList<Mat> yCrCbChannels = new ArrayList<Mat>(3);
+        Core.split(YCrCb, yCrCbChannels);
+        Y = yCrCbChannels.get(0);
+
+    }
+
+    @Override
+    public void init(Mat firstFrame) {
+        inputToY(firstFrame);
+    }
+
+    @Override
+    public Mat processFrame(Mat input) {
+        inputToY(input);
+        System.out.println("processing requested");
+        avg = (int) Core.mean(Y).val[0];
+        YCrCb.release(); // don't leak memory!
+        Y.release(); // don't leak memory!
+        return input;
+    }
+
+    public int getAnalysis() {
+        return avg;
+    }
 }
