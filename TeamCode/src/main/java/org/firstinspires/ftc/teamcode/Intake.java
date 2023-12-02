@@ -20,7 +20,7 @@ public class Intake {
     double extended = armMin;
     double armMid = .6;
     double driveSizing = .8;
-    double startSizing = .9;
+    double startSizing = .85;
 
     double endMod = .1;
     double newPos;
