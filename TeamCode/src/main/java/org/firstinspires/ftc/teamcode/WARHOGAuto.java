@@ -204,8 +204,8 @@ public class WARHOGAuto extends LinearOpMode {
 
             //Go through different combinations of things to do and set bools
             if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
-                if(actionCombination == actionCombination.PARK_ONLY){
-                    actionCombination = actionCombination.SPIKE_ONLY;
+                if(actionCombination == ActionCombination.PARK_ONLY){
+                    actionCombination = ActionCombination.SPIKE_ONLY;
                     willPark = false;
                     willBoard = false;
                     willSpike = true;
@@ -216,14 +216,14 @@ public class WARHOGAuto extends LinearOpMode {
                     willBoard = false;
                     willSpike = true;
                 }*/
-                else if(actionCombination == actionCombination.SPIKE_ONLY){
-                    actionCombination = actionCombination.PARK_BOARD;
+                else if(actionCombination == ActionCombination.SPIKE_ONLY){
+                    actionCombination = ActionCombination.PARK_BOARD;
                     willPark = true;
                     willBoard = true;
                     willSpike = false;
                 }
-                else if(actionCombination == actionCombination.PARK_BOARD){
-                    actionCombination = actionCombination.PARK_SPIKE;
+                else if(actionCombination == ActionCombination.PARK_BOARD){
+                    actionCombination = ActionCombination.PARK_SPIKE;
                     willPark = true;
                     willBoard = false;
                     willSpike = true;
@@ -234,20 +234,20 @@ public class WARHOGAuto extends LinearOpMode {
                     willBoard = false;
                     willSpike = true;
                 }*/
-                else if(actionCombination == actionCombination.PARK_SPIKE){
-                    actionCombination = actionCombination.PARK_BOARD_SPIKE;
+                else if(actionCombination == ActionCombination.PARK_SPIKE){
+                    actionCombination = ActionCombination.PARK_BOARD_SPIKE;
                     willPark = true;
                     willBoard = true;
                     willSpike = true;
                 }
-                else if(actionCombination == actionCombination.PARK_BOARD_SPIKE){
-                    actionCombination = actionCombination.NONE;
+                else if(actionCombination == ActionCombination.PARK_BOARD_SPIKE){
+                    actionCombination = ActionCombination.NONE;
                     willPark = false;
                     willBoard = false;
                     willSpike = false;
                 }
-                else if(actionCombination == actionCombination.NONE){
-                    actionCombination = actionCombination.PARK_ONLY;
+                else if(actionCombination == ActionCombination.NONE){
+                    actionCombination = ActionCombination.PARK_ONLY;
                     willPark = true;
                     willBoard = false;
                     willSpike = false;
@@ -256,17 +256,17 @@ public class WARHOGAuto extends LinearOpMode {
 
             //Manually set the random pos for testing and/or if camera doesn't work
             if (currentGamepad1.right_stick_button && !previousGamepad1.right_stick_button){
-                if (randomPos == randomPos.NULL){
-                    randomPos = randomPos.LEFT;
+                if (randomPos == RandomPos.NULL){
+                    randomPos = RandomPos.LEFT;
                 }
-                else if (randomPos == randomPos.LEFT){
-                    randomPos = randomPos.CENTER;
+                else if (randomPos == RandomPos.LEFT){
+                    randomPos = RandomPos.CENTER;
                 }
-                else if (randomPos == randomPos.CENTER){
-                    randomPos = randomPos.RIGHT;
+                else if (randomPos == RandomPos.CENTER){
+                    randomPos = RandomPos.RIGHT;
                 }
-                else if (randomPos == randomPos.RIGHT){
-                    randomPos = randomPos.NULL;
+                else if (randomPos == RandomPos.RIGHT){
+                    randomPos = RandomPos.NULL;
                 }
             }
 
@@ -275,17 +275,17 @@ public class WARHOGAuto extends LinearOpMode {
             int lumaLeft = objectDetectionPipeline.avgLEFT;
             int lumaCenter = objectDetectionPipeline.avgCENTER;
             int lumaRight = objectDetectionPipeline.avgRIGHT;
-            //===Test to see if it helps with the memory leak===
-            objectDetectionPipeline.releaseMats();
+            //===Test to see if it helps with the memory leak=== ++++++It causes a fatal error++++++
+            //objectDetectionPipeline.releaseMats();
             //Find and set which random pos. the pixel/team art is in.
             if(lumaLeft > lumaCenter & lumaLeft > lumaRight ){
-                randomPos = randomPos.LEFT;
+                randomPos = RandomPos.LEFT;
             }
             else if(lumaCenter > lumaLeft & lumaCenter > lumaRight ){
-                randomPos = randomPos.CENTER;
+                randomPos = RandomPos.CENTER;
             }
             else if(lumaRight > lumaCenter & lumaRight > lumaLeft ){
-                randomPos = randomPos.RIGHT;
+                randomPos = RandomPos.RIGHT;
             }
             else{
                 telemetry.addLine("Error with luma sensing");
@@ -303,6 +303,10 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.addData("Will Board", willBoard);
             telemetry.addData("Will Spike", willSpike);
             telemetry.addData("Random Pos.", randomPos);
+            telemetry.addLine();
+            telemetry.addData("lumaLeft", lumaLeft);
+            telemetry.addData("lumaCenter", lumaCenter);
+            telemetry.addData("lumaRight", lumaRight);
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -904,7 +908,7 @@ public class WARHOGAuto extends LinearOpMode {
         telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
-        /*telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
+        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
 
@@ -1000,7 +1004,8 @@ class ObjectDetectionPipeline extends OpenCvPipeline{
                 new Scalar(0,0,255), // The color the rectangle is drawn in
                 2); // Thickness of the rectangle lines
 
-        releaseMats();
+        //===Test to see if this also causes errors==
+        //releaseMats();
 
         return input;
     }
