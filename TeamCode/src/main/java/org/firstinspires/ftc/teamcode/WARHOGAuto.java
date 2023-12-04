@@ -270,6 +270,27 @@ public class WARHOGAuto extends LinearOpMode {
                 }
             }
 
+
+            //For sensing which third the white pixel is in
+            int lumaLeft = objectDetectionPipeline.avgLEFT;
+            int lumaCenter = objectDetectionPipeline.avgCENTER;
+            int lumaRight = objectDetectionPipeline.avgRIGHT;
+            //===Test to see if it helps with the memory leak===
+            objectDetectionPipeline.releaseMats();
+            //Find and set which random pos. the pixel/team art is in.
+            if(lumaLeft > lumaCenter & lumaLeft > lumaRight ){
+                randomPos = randomPos.LEFT;
+            }
+            else if(lumaCenter > lumaLeft & lumaCenter > lumaRight ){
+                randomPos = randomPos.CENTER;
+            }
+            else if(lumaRight > lumaCenter & lumaRight > lumaLeft ){
+                randomPos = randomPos.RIGHT;
+            }
+            else{
+                telemetry.addLine("Error with luma sensing");
+            }
+
             telemetry.addData("Color", startPosColor);
             telemetry.addData("Position", startPosPosition);
             telemetry.addData("Speed", speed);
@@ -336,20 +357,6 @@ public class WARHOGAuto extends LinearOpMode {
                 }
 
             }*/
-
-            int lumaLeft = objectDetectionPipeline.avgLEFT;
-            int lumaCenter = objectDetectionPipeline.avgCENTER;
-            int lumaRight = objectDetectionPipeline.avgRIGHT;
-            //Find and set which random pos. the pixel/gameobject is in.
-            if(lumaLeft > lumaCenter & lumaLeft > lumaRight ){
-                randomPos = randomPos.LEFT;
-            }
-            if(lumaCenter > lumaLeft & lumaCenter > lumaRight ){
-                randomPos = randomPos.CENTER;
-            }
-            if(lumaRight > lumaCenter & lumaRight > lumaLeft ){
-                randomPos = randomPos.RIGHT;
-            }
 
             telemetry.update();
             sleep(20);
@@ -992,6 +999,8 @@ class ObjectDetectionPipeline extends OpenCvPipeline{
                 RectRightBRCorner, // Second point which defines the rectangle
                 new Scalar(0,0,255), // The color the rectangle is drawn in
                 2); // Thickness of the rectangle lines
+
+        releaseMats();
 
         return input;
     }
