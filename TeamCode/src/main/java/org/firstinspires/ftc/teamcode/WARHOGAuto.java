@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.exception.RobotCoreException;
+//import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -13,6 +13,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.opencv.core.Mat;
 import org.opencv.core.Core;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
@@ -89,6 +92,7 @@ public class WARHOGAuto extends LinearOpMode {
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         Intake intake = new Intake(hardwareMap, telemetry);
 
+        //Setup Camera and OpenCV
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         //aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -111,7 +115,7 @@ public class WARHOGAuto extends LinearOpMode {
                 telemetry.update();
 
                 //To cover my butt, but it might come back to bite my butt
-                randomPos = randomPos.NULL;
+                randomPos = RandomPos.NULL;
             }
         });
 
@@ -120,7 +124,9 @@ public class WARHOGAuto extends LinearOpMode {
 
         //init loop
         while (!isStarted() && !isStopRequested()) {
+            //Run the robot arm to its starting position
             intake.runArm(Intake.Height.STARTSIZING);
+
             //set up inputs - have previous so that you can check rising edge
             try {
                 previousGamepad1.copy(currentGamepad1);
@@ -185,14 +191,14 @@ public class WARHOGAuto extends LinearOpMode {
                 else if(!targetMidPos){
                     targetMidPos = true;
                 }*/
-                if(parkPos == parkPos.MIDDLE){
-                    parkPos = parkPos.CORNER;
+                if(parkPos == ParkPos.MIDDLE){
+                    parkPos = ParkPos.CORNER;
                 }
-                else if (parkPos == parkPos.CORNER){
-                    parkPos = parkPos.NO;
+                else if (parkPos == ParkPos.CORNER){
+                    parkPos = ParkPos.NO;
                 }
-                else if (parkPos == parkPos.NO){
-                    parkPos = parkPos.MIDDLE;
+                else if (parkPos == ParkPos.NO){
+                    parkPos = ParkPos.MIDDLE;
                 }
             }
 
@@ -331,8 +337,19 @@ public class WARHOGAuto extends LinearOpMode {
 
             }*/
 
+            int lumaLeft = objectDetectionPipeline.avgLEFT;
+            int lumaCenter = objectDetectionPipeline.avgCENTER;
+            int lumaRight = objectDetectionPipeline.avgRIGHT;
             //Find and set which random pos. the pixel/gameobject is in.
-
+            if(lumaLeft > lumaCenter & lumaLeft > lumaRight ){
+                randomPos = randomPos.LEFT;
+            }
+            if(lumaCenter > lumaLeft & lumaCenter > lumaRight ){
+                randomPos = randomPos.CENTER;
+            }
+            if(lumaRight > lumaCenter & lumaRight > lumaLeft ){
+                randomPos = randomPos.RIGHT;
+            }
 
             telemetry.update();
             sleep(20);
@@ -535,11 +552,12 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.update();
         }
         else if(blue&&back){
-            //Move off the wall
-            drivetrain.MoveForDis(4,speed);
 
             //1 of 6: Only Park
             if(actionCombination == actionCombination.PARK_ONLY){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
                 //To go to the middle of the backstage
                 if(parkPos == parkPos.MIDDLE){
                     //To move out to the middle
@@ -579,28 +597,87 @@ public class WARHOGAuto extends LinearOpMode {
 
             //2 of 6: Only Spike*
             if(actionCombination == actionCombination.SPIKE_ONLY){
-                //***Based on random pos move to where robot can place down spike***
+                //========TEST CODE========
+                if(randomPos == randomPos.LEFT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(20,speed);
 
-                //***Run arm to place spike***
-                intake.runArm(.10);
-                sleep(1000);
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(45, speed-.25);
 
-                //***Open claw, retract arm***
-                intake.openClaw();
-                sleep(1000);
-                intake.closeClaw();
-                intake.runArm(intake.armMax);
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
 
-                telemetry.addLine("Pixel Placed on Spike");
-                //***Realign with wall***
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(intake.armMax);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                if(randomPos == randomPos.CENTER){
+                    //Move off the wall
+                    drivetrain.MoveForDis(24,speed);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(intake.armMax);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                if(randomPos == randomPos.RIGHT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(20,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(-45, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(intake.armMax);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                if(randomPos == randomPos.NULL){
+                    telemetry.addLine("randomPos = NULL, can't do anything");
+                }
+                telemetry.update();
+
+                //Realign with wall
+                if(randomPos == randomPos.LEFT){
+                    drivetrain.RotateForDegree(-45, speed-.25);
+                }
+                else if (randomPos == randomPos.RIGHT){
+                    drivetrain.RotateForDegree(45, speed-.25);
+                }
+
+                //========END TEST CODE========
+
                 telemetry.addLine("Action: SPIKE_ONLY completed");
                 telemetry.update();
-                sleep(3000);
+                sleep(2000);
 
             }
 
             //3 of 6: Park and Board*
             if(actionCombination == actionCombination.PARK_BOARD){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
                 //To go to the middle of the backstage
                 if(parkPos == parkPos.MIDDLE){
                     //To move out to the middle
@@ -641,6 +718,9 @@ public class WARHOGAuto extends LinearOpMode {
 
             //4 of 6: Park and Spike*
             if(actionCombination == actionCombination.PARK_SPIKE){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
                 //***Based on random pos move to where robot can place down spike***
 
                 //++++CODE inaction 2++++
@@ -684,6 +764,9 @@ public class WARHOGAuto extends LinearOpMode {
 
             //5 of 6: Park, Board, and Spike*
             if(actionCombination == actionCombination.PARK_BOARD_SPIKE){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
                 //***Place on spike***
                 //***If not center and need not go to middle to park, realign and go to board***
                 //***Place on board***
@@ -827,24 +910,55 @@ class ObjectDetectionPipeline extends OpenCvPipeline{
 
     Mat YCrCb = new Mat();
     Mat Y = new Mat();
-    int avg;
+    Mat RectLEFT_Y = new Mat();
+    Mat RectCENTER_Y = new Mat();
+    Mat RectRIGHT_Y = new Mat();
 
+    int avg;
+    int avgLEFT;
+    int avgCENTER;
+    int avgRIGHT;
+
+    static final int STREAM_WIDTH = 1280; // modify for your camera
+    static final int STREAM_HEIGHT = 720; // modify for your camera
+
+    //Rectangle Sizes
+    static final int WidthRectSides = 200;
+    static final int HeightRectSides = 110;
+    static final int WidthRectCenter = 200;
+    static final int HeightRectCenter = 110;
+
+    //Change values here to correctly target the thirds
+    static final Point RectLeftTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 300, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
+    static final Point RectCenterTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectCenter) / 2 + 150, ((STREAM_HEIGHT - HeightRectCenter) / 2) - 100);
+    static final Point RectRightTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 100, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
+
+    Point RectLeftTLCorner = new Point(RectLeftTopLeftAnchor.x, RectLeftTopLeftAnchor.y);
+    Point RectLeftBRCorner = new Point(RectLeftTopLeftAnchor.x + WidthRectSides, RectLeftTopLeftAnchor.y + HeightRectSides);
+
+    Point RectCenterTLCorner = new Point(RectCenterTopLeftAnchor.x, RectCenterTopLeftAnchor.y);
+    Point RectCenterBRCorner = new Point(RectCenterTopLeftAnchor.x + WidthRectCenter, RectCenterTopLeftAnchor.y + HeightRectCenter);
+
+    Point RectRightTLCorner = new Point(RectRightTopLeftAnchor.x, RectRightTopLeftAnchor.y);
+    Point RectRightBRCorner = new Point(RectRightTopLeftAnchor.x + WidthRectSides, RectRightTopLeftAnchor.y + HeightRectSides);
 
     /*
-     * This function takes the RGB frame, converts to YCrCb,
-     * and extracts the Y channel to the 'Y' variable
+     This function takes the RGB frame, converts to YCrCb,
+     and extracts the Y channel to the 'Y' variable
      */
     void inputToY(Mat input) {
         Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
         ArrayList<Mat> yCrCbChannels = new ArrayList<Mat>(3);
         Core.split(YCrCb, yCrCbChannels);
         Y = yCrCbChannels.get(0);
-
     }
 
     @Override
     public void init(Mat firstFrame) {
         inputToY(firstFrame);
+        RectLEFT_Y = Y.submat(new Rect(RectLeftTLCorner, RectLeftBRCorner));
+        RectCENTER_Y = Y.submat(new Rect(RectCenterTLCorner, RectCenterBRCorner));
+        RectRIGHT_Y = Y.submat(new Rect(RectRightTLCorner, RectRightBRCorner));
     }
 
     @Override
@@ -852,12 +966,55 @@ class ObjectDetectionPipeline extends OpenCvPipeline{
         inputToY(input);
         System.out.println("processing requested");
         avg = (int) Core.mean(Y).val[0];
+        avgLEFT = (int) Core.mean(RectLEFT_Y).val[0];
+        avgCENTER = (int) Core.mean(RectCENTER_Y).val[0];
+        avgRIGHT = (int) Core.mean(RectRIGHT_Y).val[0];
         YCrCb.release(); // don't leak memory!
         Y.release(); // don't leak memory!
+
+        Imgproc.rectangle( // rings
+                input, // Buffer to draw on
+                RectLeftTLCorner, // First point which defines the rectangle
+                RectLeftBRCorner, // Second point which defines the rectangle
+                new Scalar(0,0,255), // The color the rectangle is drawn in
+                2); // Thickness of the rectangle lines
+
+        Imgproc.rectangle( // rings
+                input, // Buffer to draw on
+                RectCenterTLCorner, // First point which defines the rectangle
+                RectCenterBRCorner, // Second point which defines the rectangle
+                new Scalar(0,0,255), // The color the rectangle is drawn in
+                2); // Thickness of the rectangle lines
+
+        Imgproc.rectangle( // rings
+                input, // Buffer to draw on
+                RectRightTLCorner, // First point which defines the rectangle
+                RectRightBRCorner, // Second point which defines the rectangle
+                new Scalar(0,0,255), // The color the rectangle is drawn in
+                2); // Thickness of the rectangle lines
+
         return input;
+    }
+
+    //Test to see if it fixes memory leak issue it probably will not
+    public void releaseMats(){
+        YCrCb.release();
+        Y.release();
+        RectLEFT_Y.release();
+        RectCENTER_Y.release();
+        RectRIGHT_Y.release();
     }
 
     public int getAnalysis() {
         return avg;
+    }
+    public int getRectLeft_Analysis() {
+        return avgLEFT;
+    }
+    public int getRectCenter_Analysis() {
+        return avgCENTER;
+    }
+    public int getRectRight_Analysis() {
+        return avgRIGHT;
     }
 }
