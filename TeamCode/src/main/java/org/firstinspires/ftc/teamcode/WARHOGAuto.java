@@ -27,7 +27,7 @@ public class WARHOGAuto extends LinearOpMode {
 
     private StartPosColor startPosColor = StartPosColor.RED;
     private enum StartPosColor {RED, BLUE}
-    private StartPosPosition startPosPosition = StartPosPosition.FRONT;
+    private StartPosPosition startPosPosition = StartPosPosition.BACK;
     private enum StartPosPosition {FRONT, BACK}
     private ParkPos parkPos = ParkPos.CORNER;
     private enum ParkPos {NO, CORNER, MIDDLE} //For where to park if at all
@@ -298,11 +298,11 @@ public class WARHOGAuto extends LinearOpMode {
             //telemetry.addData("Target Middle Pos.", targetMidPos);
             telemetry.addData("Park Pos.", parkPos);
             telemetry.addData("Combination", actionCombination);
+            telemetry.addData("Random Pos.", randomPos);
             telemetry.addLine();
             telemetry.addData("Will Park", willPark);
             telemetry.addData("Will Board", willBoard);
             telemetry.addData("Will Spike", willSpike);
-            telemetry.addData("Random Pos.", randomPos);
             telemetry.addLine();
             telemetry.addData("lumaLeft", lumaLeft);
             telemetry.addData("lumaCenter", lumaCenter);
@@ -608,13 +608,12 @@ public class WARHOGAuto extends LinearOpMode {
 
             //2 of 6: Only Spike*
             if(actionCombination == actionCombination.SPIKE_ONLY){
-                //========TEST CODE========
                 if(randomPos == randomPos.LEFT){
                     //Move off the wall
-                    drivetrain.MoveForDis(20,speed);
+                    drivetrain.MoveForDis(10,speed);
 
                     //Rotate for arm to place pixel
-                    drivetrain.RotateForDegree(45, speed-.25);
+                    drivetrain.RotateForDegree(20, speed-.25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
@@ -624,13 +623,13 @@ public class WARHOGAuto extends LinearOpMode {
                     intake.openClaw();
                     sleep(1000);
                     intake.closeClaw();
-                    intake.runArm(intake.armMax);
+                    intake.runArm(.85);
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                if(randomPos == randomPos.CENTER){
+                else if(randomPos == randomPos.CENTER){
                     //Move off the wall
-                    drivetrain.MoveForDis(24,speed);
+                    drivetrain.MoveForDis(14,speed);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
@@ -640,16 +639,16 @@ public class WARHOGAuto extends LinearOpMode {
                     intake.openClaw();
                     sleep(1000);
                     intake.closeClaw();
-                    intake.runArm(intake.armMax);
+                    intake.runArm(.85);
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                if(randomPos == randomPos.RIGHT){
+                else if(randomPos == randomPos.RIGHT){
                     //Move off the wall
-                    drivetrain.MoveForDis(20,speed);
+                    drivetrain.MoveForDis(10,speed);
 
                     //Rotate for arm to place pixel
-                    drivetrain.RotateForDegree(-45, speed-.25);
+                    drivetrain.RotateForDegree(-30, speed-.25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
@@ -659,28 +658,27 @@ public class WARHOGAuto extends LinearOpMode {
                     intake.openClaw();
                     sleep(1000);
                     intake.closeClaw();
-                    intake.runArm(intake.armMax);
+                    intake.runArm(.85);
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                if(randomPos == randomPos.NULL){
+                else if(randomPos == randomPos.NULL){
                     telemetry.addLine("randomPos = NULL, can't do anything");
                 }
                 telemetry.update();
 
                 //Realign with wall
                 if(randomPos == randomPos.LEFT){
-                    drivetrain.RotateForDegree(-45, speed-.25);
+                    drivetrain.RotateForDegree(-20, speed-.25);
                 }
                 else if (randomPos == randomPos.RIGHT){
-                    drivetrain.RotateForDegree(45, speed-.25);
+                    drivetrain.RotateForDegree(30, speed-.25);
                 }
 
-                //========END TEST CODE========
 
                 telemetry.addLine("Action: SPIKE_ONLY completed");
                 telemetry.update();
-                sleep(2000);
+                sleep(1000);
 
             }
 
@@ -934,15 +932,15 @@ class ObjectDetectionPipeline extends OpenCvPipeline{
     static final int STREAM_HEIGHT = 720; // modify for your camera
 
     //Rectangle Sizes
-    static final int WidthRectSides = 200;
-    static final int HeightRectSides = 110;
-    static final int WidthRectCenter = 200;
-    static final int HeightRectCenter = 110;
+    static final int WidthRectSides = 300;
+    static final int HeightRectSides = 500;
+    static final int WidthRectCenter = 300;
+    static final int HeightRectCenter = 500;
 
     //Change values here to correctly target the thirds
-    static final Point RectLeftTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 300, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
+    static final Point RectLeftTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 000, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
     static final Point RectCenterTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectCenter) / 2 + 150, ((STREAM_HEIGHT - HeightRectCenter) / 2) - 100);
-    static final Point RectRightTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 100, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
+    static final Point RectRightTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 450, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
 
     Point RectLeftTLCorner = new Point(RectLeftTopLeftAnchor.x, RectLeftTopLeftAnchor.y);
     Point RectLeftBRCorner = new Point(RectLeftTopLeftAnchor.x + WidthRectSides, RectLeftTopLeftAnchor.y + HeightRectSides);
@@ -987,7 +985,7 @@ class ObjectDetectionPipeline extends OpenCvPipeline{
                 input, // Buffer to draw on
                 RectLeftTLCorner, // First point which defines the rectangle
                 RectLeftBRCorner, // Second point which defines the rectangle
-                new Scalar(0,0,255), // The color the rectangle is drawn in
+                new Scalar(0,255,0), // The color the rectangle is drawn in
                 2); // Thickness of the rectangle lines
 
         Imgproc.rectangle( // rings
@@ -1001,11 +999,11 @@ class ObjectDetectionPipeline extends OpenCvPipeline{
                 input, // Buffer to draw on
                 RectRightTLCorner, // First point which defines the rectangle
                 RectRightBRCorner, // Second point which defines the rectangle
-                new Scalar(0,0,255), // The color the rectangle is drawn in
+                new Scalar(255,0,0), // The color the rectangle is drawn in
                 2); // Thickness of the rectangle lines
 
         //===Test to see if this also causes errors==
-        //releaseMats();
+        releaseMats();
 
         return input;
     }
