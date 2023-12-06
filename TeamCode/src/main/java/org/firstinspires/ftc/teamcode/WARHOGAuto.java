@@ -38,7 +38,8 @@ public class WARHOGAuto extends LinearOpMode {
 
     OpenCvCamera camera;
     //AprilTagDetectionPipeline aprilTagDetectionPipeline;
-    ObjectDetectionPipeline objectDetectionPipeline;
+    //ObjectDetectionPipeline objectDetectionPipeline;
+    RandomPosByColorDetectionPipeline randomPosByColorDetectionPipeline;
 
 
     Gamepad currentGamepad1 = new Gamepad();
@@ -59,6 +60,7 @@ public class WARHOGAuto extends LinearOpMode {
     boolean willPark = false; //for interior code use for if the robot will park
     boolean willSpike = false; //for interior code use for if the robot will place a pixel on a spike
     boolean willBoard = false; //for interior code use for if the robot will place a pixel on the backdrop
+    boolean useCamera = true; //for testing to say if it will use the camera
 
     double speed = .50;
     double startSleep = 1; //How many seconds to wait before starting autonomous
@@ -96,10 +98,12 @@ public class WARHOGAuto extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         //aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
-        objectDetectionPipeline = new ObjectDetectionPipeline();
+        //objectDetectionPipeline = new ObjectDetectionPipeline();
+        randomPosByColorDetectionPipeline = new RandomPosByColorDetectionPipeline();
 
         //camera.setPipeline(aprilTagDetectionPipeline);
-        camera.setPipeline(objectDetectionPipeline);
+        //camera.setPipeline(objectDetectionPipeline);
+        camera.setPipeline(randomPosByColorDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -270,6 +274,10 @@ public class WARHOGAuto extends LinearOpMode {
                 }
             }
 
+            /*//For camera usage in desicion making
+            if (currentGamepad1.left_stick_button && !previousGamepad1.left_stick_button){
+                useCamera = !useCamera;
+            }
 
             //For sensing which third the white pixel is in
             int lumaLeft = objectDetectionPipeline.avgLEFT;
@@ -289,6 +297,21 @@ public class WARHOGAuto extends LinearOpMode {
             }
             else{
                 telemetry.addLine("Error with luma sensing");
+            }*/
+
+            //OpenCV Pipeline 2 w/ RandomPosByColorDetectionPipeline
+            switch (randomPosByColorDetectionPipeline.getLocation()){
+                case LEFT:
+                    randomPos = RandomPos.LEFT;
+                    break;
+                case CENTER:
+                    randomPos = RandomPos.CENTER;
+                    break;
+                case RIGHT:
+                    randomPos = RandomPos.RIGHT;
+                    break;
+                case NOT_FOUND:
+                    randomPos = RandomPos.NULL;
             }
 
             telemetry.addData("Color", startPosColor);
@@ -303,10 +326,13 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.addData("Will Park", willPark);
             telemetry.addData("Will Board", willBoard);
             telemetry.addData("Will Spike", willSpike);
+            /*
             telemetry.addLine();
             telemetry.addData("lumaLeft", lumaLeft);
             telemetry.addData("lumaCenter", lumaCenter);
             telemetry.addData("lumaRight", lumaRight);
+            telemetry.addData("Camera?", useCamera);
+            */
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
