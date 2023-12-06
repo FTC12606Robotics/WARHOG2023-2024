@@ -109,7 +109,7 @@ public class WARHOGAuto extends LinearOpMode {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(1280,720, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override
@@ -300,7 +300,7 @@ public class WARHOGAuto extends LinearOpMode {
             }*/
 
             //OpenCV Pipeline 2 w/ RandomPosByColorDetectionPipeline
-            switch (randomPosByColorDetectionPipeline.getLocation()){
+            /*switch (randomPosByColorDetectionPipeline.getLocation()){
                 case LEFT:
                     randomPos = RandomPos.LEFT;
                     break;
@@ -312,6 +312,19 @@ public class WARHOGAuto extends LinearOpMode {
                     break;
                 case NOT_FOUND:
                     randomPos = RandomPos.NULL;
+            }*/
+
+            if(randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.NOT_FOUND){
+                randomPos = RandomPos.NULL;
+            }
+            else if(randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.LEFT){
+                randomPos = RandomPos.LEFT;
+            }
+            else if (randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.CENTER){
+                randomPos = RandomPos.CENTER;
+            }
+            else if (randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.RIGHT){
+                randomPos = RandomPos.RIGHT;
             }
 
             telemetry.addData("Color", startPosColor);
@@ -326,6 +339,11 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.addData("Will Park", willPark);
             telemetry.addData("Will Board", willBoard);
             telemetry.addData("Will Spike", willSpike);
+            telemetry.addLine();
+            telemetry.addData("Left percentage", Math.round(randomPosByColorDetectionPipeline.leftValue * 100) + "%");
+            telemetry.addData("Center percentage", Math.round(randomPosByColorDetectionPipeline.centerValue * 100) + "%");
+            telemetry.addData("Right percentage", Math.round(randomPosByColorDetectionPipeline.rightValue * 100) + "%");
+            telemetry.addData("Sensed Pos.", randomPosByColorDetectionPipeline.location);
             /*
             telemetry.addLine();
             telemetry.addData("lumaLeft", lumaLeft);
@@ -394,6 +412,9 @@ public class WARHOGAuto extends LinearOpMode {
 
 
         //Start command just came in
+
+        //Stop the camera
+        camera.stopStreaming();
 
         //Set modifier values
         switch (startPosColor){
@@ -521,7 +542,7 @@ public class WARHOGAuto extends LinearOpMode {
         //Wait
         sleep((long)((startSleep)*1000));
 
-        //Close claw
+        //===Close claw===This might not be needed===
         intake.closeClaw();
 
         //Blocks to run for different start positions
@@ -634,7 +655,7 @@ public class WARHOGAuto extends LinearOpMode {
 
             //2 of 6: Only Spike*
             if(actionCombination == actionCombination.SPIKE_ONLY){
-                if(randomPos == randomPos.LEFT){
+                if(randomPos == RandomPos.LEFT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
 
@@ -653,7 +674,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == randomPos.CENTER){
+                else if(randomPos == RandomPos.CENTER){
                     //Move off the wall
                     drivetrain.MoveForDis(14,speed);
 
@@ -669,7 +690,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == randomPos.RIGHT){
+                else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
 
@@ -688,16 +709,16 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == randomPos.NULL){
+                else if(randomPos == RandomPos.NULL){
                     telemetry.addLine("randomPos = NULL, can't do anything");
                 }
                 telemetry.update();
 
                 //Realign with wall
-                if(randomPos == randomPos.LEFT){
+                if(randomPos == RandomPos.LEFT){
                     drivetrain.RotateForDegree(-20, speed-.25);
                 }
-                else if (randomPos == randomPos.RIGHT){
+                else if (randomPos == RandomPos.RIGHT){
                     drivetrain.RotateForDegree(30, speed-.25);
                 }
 

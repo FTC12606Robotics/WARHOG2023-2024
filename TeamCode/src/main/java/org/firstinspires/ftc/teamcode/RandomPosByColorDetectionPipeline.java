@@ -15,8 +15,8 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
     Telemetry telemetry;
     Mat mat = new Mat();
     public enum Location {LEFT, CENTER, RIGHT, NOT_FOUND}
-    private Location location;
-
+    public Location location;
+    //public RandomPosByColorDetectionPipeline(Telemetry t) { telemetry = t; }
     static final int STREAM_WIDTH = 1280; // modify for your camera
     static final int STREAM_HEIGHT = 720; // modify for your camera
 
@@ -43,13 +43,17 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
     static final Rect LEFT_ROI = new Rect(RectLeftTLCorner, RectLeftBRCorner);
     static final Rect CENTER_ROI = new Rect(RectCenterTLCorner, RectCenterBRCorner);
     static final Rect RIGHT_ROI = new Rect(RectRightTLCorner, RectRightBRCorner);
-    static double PERCENT_WHITE_THRESHOLD = 0.1;
+    static double PERCENT_WHITE_THRESHOLD = 0.01;
+
+    public double leftValue;
+    public double centerValue;
+    public double rightValue;
 
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
         Scalar lowHSV = new Scalar(0, 0, 240);
-        Scalar highHSV = new Scalar(255, 255, 255);
+        Scalar highHSV = new Scalar(255, 5, 255);
 
         Core.inRange(mat, lowHSV, highHSV, mat);
 
@@ -57,20 +61,20 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
         Mat center = mat.submat(CENTER_ROI);
         Mat right = mat.submat(RIGHT_ROI);
 
-        double leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 255;
-        double centerValue = Core.sumElems(center).val[0] / CENTER_ROI.area() / 255;
-        double rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 255;
+        leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 255;
+        centerValue = Core.sumElems(center).val[0] / CENTER_ROI.area() / 255;
+        rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 255;
 
         left.release();
         center.release();
         right.release();
 
-        telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
+        /*telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
         telemetry.addData("Center raw value", (int) Core.sumElems(center).val[0]);
         telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
         telemetry.addData("Left percentage", Math.round(leftValue * 100) + "%");
         telemetry.addData("Center percentage", Math.round(centerValue * 100) + "%");
-        telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");
+        telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");*/
 
         boolean posLeft = leftValue > PERCENT_WHITE_THRESHOLD;
         boolean posCenter = centerValue > PERCENT_WHITE_THRESHOLD;
@@ -78,27 +82,27 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
 
         if (posLeft){
             location = Location.LEFT;
-            telemetry.addData("Location", "left");
+            //telemetry.addData("Location", "left");
         }
         else if (posCenter){
             location = Location.CENTER;
-            telemetry.addData("Location", "Center");
+            //telemetry.addData("Location", "Center");
         }
-        else if (posRight){
+        else if (rightValue > PERCENT_WHITE_THRESHOLD & rightValue > leftValue & rightValue > centerValue){
             location = Location.RIGHT;
-            telemetry.addData("Location", "Right");
+            //telemetry.addData("Location", "Right");
         }
         else{
             location = Location.NOT_FOUND;
-            telemetry.addData("Location", "Not found");
+            //telemetry.addData("Location", "Not found");
         }
-        telemetry.update();
+        //telemetry.update();
 
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
-        Imgproc.rectangle(mat, LEFT_ROI, new Scalar(0,255,0), 2);
-        Imgproc.rectangle(mat, CENTER_ROI, new Scalar(0,0,255), 2);
-        Imgproc.rectangle(mat, RIGHT_ROI, new Scalar(255,0,0), 2);
+        Imgproc.rectangle(mat, RectLeftTLCorner, RectLeftBRCorner, new Scalar(0,255,0), 2);
+        Imgproc.rectangle(mat, RectCenterTLCorner, RectCenterBRCorner, new Scalar(0,0,255), 2);
+        Imgproc.rectangle(mat, RectRightTLCorner, RectRightBRCorner, new Scalar(255,0,0), 2);
 
         return input;
     }
