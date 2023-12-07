@@ -573,7 +573,7 @@ public class WARHOGAuto extends LinearOpMode {
             drivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
-            if(parkPos == parkPos.MIDDLE){
+            if(parkPos == ParkPos.MIDDLE){
                 drivetrain.MoveForDis(51,speed);
             }
 
@@ -592,7 +592,7 @@ public class WARHOGAuto extends LinearOpMode {
             drivetrain.MoveForDis(4,speed);
 
             //Check if we are going to the backstage middle
-            if(parkPos == parkPos.MIDDLE){
+            if(parkPos == ParkPos.MIDDLE){
                 drivetrain.MoveForDis(51,speed);
             }
 
@@ -617,7 +617,7 @@ public class WARHOGAuto extends LinearOpMode {
                 drivetrain.MoveForDis(4,speed);
 
                 //To go to the middle of the backstage
-                if(parkPos == parkPos.MIDDLE){
+                if(parkPos == ParkPos.MIDDLE){
                     //To move out to the middle
                     drivetrain.MoveForDis(51,speed);
 
@@ -632,7 +632,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
 
                 //To go to the corner of the backstage
-                else if(parkPos == parkPos.CORNER){
+                else if(parkPos == ParkPos.CORNER){
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
                     drivetrain.MoveForDis(48, speed);
@@ -735,7 +735,7 @@ public class WARHOGAuto extends LinearOpMode {
                 drivetrain.MoveForDis(4,speed);
 
                 //To go to the middle of the backstage
-                if(parkPos == parkPos.MIDDLE){
+                if(parkPos == ParkPos.MIDDLE){
                     //To move out to the middle
                     drivetrain.MoveForDis(51,speed);
 
@@ -750,7 +750,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
 
                 //To go to the corner of the backstage
-                else if(parkPos == parkPos.CORNER){
+                else if(parkPos == ParkPos.CORNER){
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
                     drivetrain.MoveForDis(48, speed);
@@ -789,7 +789,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                 //***Remember to make sure going to the middle does not affect spikes***
                 //To go to the middle of the backstage
-                if(parkPos == parkPos.MIDDLE){
+                if(parkPos == ParkPos.MIDDLE){
                     //To move out to the middle
                     drivetrain.MoveForDis(51,speed);
 
@@ -804,7 +804,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
 
                 //To go to the corner of the backstage
-                else if(parkPos == parkPos.CORNER){
+                else if(parkPos == ParkPos.CORNER){
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
                     drivetrain.MoveForDis(48, speed);
@@ -998,10 +998,10 @@ class ObjectDetectionPipeline extends OpenCvPipeline{
     Point RectRightTLCorner = new Point(RectRightTopLeftAnchor.x, RectRightTopLeftAnchor.y);
     Point RectRightBRCorner = new Point(RectRightTopLeftAnchor.x + WidthRectSides, RectRightTopLeftAnchor.y + HeightRectSides);
 
-    /*
-     This function takes the RGB frame, converts to YCrCb,
-     and extracts the Y channel to the 'Y' variable
-     */
+
+     //This function takes the RGB frame, converts to YCrCb,
+     //and extracts the Y channel to the 'Y' variable
+
     void inputToY(Mat input) {
         Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
         ArrayList<Mat> yCrCbChannels = new ArrayList<Mat>(3);

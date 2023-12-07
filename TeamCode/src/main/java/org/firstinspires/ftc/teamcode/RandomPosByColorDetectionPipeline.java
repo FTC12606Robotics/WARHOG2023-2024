@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import org.checkerframework.checker.units.qual.C;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+//import org.checkerframework.checker.units.qual.C;
+//import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.opencv.core.Core;
@@ -12,7 +12,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
-    Telemetry telemetry;
+    //Telemetry telemetry;
     Mat mat = new Mat();
     public enum Location {LEFT, CENTER, RIGHT, NOT_FOUND}
     public Location location;
@@ -76,15 +76,15 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
         telemetry.addData("Center percentage", Math.round(centerValue * 100) + "%");
         telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");*/
 
-        boolean posLeft = leftValue > PERCENT_WHITE_THRESHOLD;
-        boolean posCenter = centerValue > PERCENT_WHITE_THRESHOLD;
-        boolean posRight = rightValue > PERCENT_WHITE_THRESHOLD;
+        //boolean posLeft = leftValue > PERCENT_WHITE_THRESHOLD;
+        //boolean posCenter = centerValue > PERCENT_WHITE_THRESHOLD;
+        //boolean posRight = rightValue > PERCENT_WHITE_THRESHOLD;
 
-        if (posLeft){
+        if (leftValue > PERCENT_WHITE_THRESHOLD & leftValue > rightValue & leftValue > centerValue){
             location = Location.LEFT;
             //telemetry.addData("Location", "left");
         }
-        else if (posCenter){
+        else if (centerValue > PERCENT_WHITE_THRESHOLD & centerValue > leftValue & centerValue > rightValue){
             location = Location.CENTER;
             //telemetry.addData("Location", "Center");
         }
