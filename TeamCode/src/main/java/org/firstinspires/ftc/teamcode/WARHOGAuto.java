@@ -274,12 +274,12 @@ public class WARHOGAuto extends LinearOpMode {
                 }
             }
 
-            /*//For camera usage in desicion making
+            //For camera usage in desicion making
             if (currentGamepad1.left_stick_button && !previousGamepad1.left_stick_button){
                 useCamera = !useCamera;
             }
 
-            //For sensing which third the white pixel is in
+            /*//For sensing which third the white pixel is in
             int lumaLeft = objectDetectionPipeline.avgLEFT;
             int lumaCenter = objectDetectionPipeline.avgCENTER;
             int lumaRight = objectDetectionPipeline.avgRIGHT;
@@ -314,17 +314,20 @@ public class WARHOGAuto extends LinearOpMode {
                     randomPos = RandomPos.NULL;
             }*/
 
-            if(randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.NOT_FOUND){
-                randomPos = RandomPos.NULL;
-            }
-            else if(randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.LEFT){
-                randomPos = RandomPos.LEFT;
-            }
-            else if (randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.CENTER){
-                randomPos = RandomPos.CENTER;
-            }
-            else if (randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.RIGHT){
-                randomPos = RandomPos.RIGHT;
+            //If use camera toggle is on update randomPos based on location
+            if(useCamera){
+                if(randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.NOT_FOUND){
+                    randomPos = RandomPos.NULL;
+                }
+                else if(randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.LEFT){
+                    randomPos = RandomPos.LEFT;
+                }
+                else if (randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.CENTER){
+                    randomPos = RandomPos.CENTER;
+                }
+                else if (randomPosByColorDetectionPipeline.location ==  RandomPosByColorDetectionPipeline.Location.RIGHT){
+                    randomPos = RandomPos.RIGHT;
+                }
             }
 
             telemetry.addData("Color", startPosColor);
@@ -344,12 +347,12 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.addData("Center percentage", Math.round(randomPosByColorDetectionPipeline.centerValue * 100) + "%");
             telemetry.addData("Right percentage", Math.round(randomPosByColorDetectionPipeline.rightValue * 100) + "%");
             telemetry.addData("Sensed Pos.", randomPosByColorDetectionPipeline.location);
+            telemetry.addData("Use Camera?", useCamera);
             /*
             telemetry.addLine();
             telemetry.addData("lumaLeft", lumaLeft);
             telemetry.addData("lumaCenter", lumaCenter);
             telemetry.addData("lumaRight", lumaRight);
-            telemetry.addData("Camera?", useCamera);
             */
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();

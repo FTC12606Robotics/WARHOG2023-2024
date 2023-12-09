@@ -21,14 +21,14 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
     static final int STREAM_HEIGHT = 720; // modify for your camera
 
     //Rectangle Sizes
-    static final int WidthRectSides = 300;
-    static final int HeightRectSides = 500;
-    static final int WidthRectCenter = 300;
-    static final int HeightRectCenter = 500;
+    static final int WidthRectSides = 250;
+    static final int HeightRectSides = 450;
+    static final int WidthRectCenter = 450;
+    static final int HeightRectCenter = 250;
 
     //Change values here to correctly target the thirds
-    static final Point RectLeftTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 000, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
-    static final Point RectCenterTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectCenter) / 2 + 150, ((STREAM_HEIGHT - HeightRectCenter) / 2) - 100);
+    static final Point RectLeftTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 - 450, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
+    static final Point RectCenterTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectCenter) / 2 + 0, ((STREAM_HEIGHT - HeightRectCenter) / 2) - 200);
     static final Point RectRightTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 450, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
 
     static Point RectLeftTLCorner = new Point(RectLeftTopLeftAnchor.x, RectLeftTopLeftAnchor.y);
@@ -104,7 +104,7 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
         Imgproc.rectangle(mat, RectCenterTLCorner, RectCenterBRCorner, new Scalar(0,0,255), 2);
         Imgproc.rectangle(mat, RectRightTLCorner, RectRightBRCorner, new Scalar(255,0,0), 2);
 
-        return input;
+        return mat;
     }
 
     public Location getLocation() {
