@@ -546,12 +546,12 @@ public class WARHOGAuto extends LinearOpMode {
         sleep((long)((startSleep)*1000));
 
         //===Close claw===This might not be needed===
-        intake.closeClaw();
+        //intake.closeClaw();
 
         //Blocks to run for different start positions
         if(red&&front){
 
-            //1 of 6: Only Park*
+            //1 of 6: Only Park
             if(actionCombination == ActionCombination.PARK_ONLY){
                 //Move off the wall
                 drivetrain.MoveForDis(4,speed);
@@ -780,23 +780,28 @@ public class WARHOGAuto extends LinearOpMode {
 
                 //To go to the middle of the backstage when spike is in the way
                 if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
-                    //Turn and Move to the backstage
+                    /*//Turn and Move to the backstage
                     drivetrain.RotateForDegree(45*colorMod, speed-.25);
                     drivetrain.MoveForDis(60, speed);
 
                     //Move so not touching pixels hopefully
                     drivetrain.MoveForDis(-4,speed);
 
-                    telemetry.addLine("Park complete");
+                    telemetry.addLine("Park complete");*/
+                    telemetry.addLine("Random Pos is in center, no can do");
+                    telemetry.update();
                 }
                 //To go to the middle of backstage if spike is not in the way
                 if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
                     //To move out to the middle
-                    drivetrain.MoveForDis(45,speed);
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Retract arm to go under the gate
+                    intake.runArm(intake.armMax);
 
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(48, speed);
+                    drivetrain.MoveForDis(96, speed);
 
                     //Move so not touching pixels hopefully
                     drivetrain.MoveForDis(-6,speed);
@@ -808,9 +813,12 @@ public class WARHOGAuto extends LinearOpMode {
                     //Move back to be inline
                     drivetrain.MoveForDis(-7,speed-.2);
 
+                    //Retract arm to go under the gate
+                    intake.runArm(intake.armMax);
+
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(42, speed);
+                    drivetrain.MoveForDis(96, speed);
 
                     telemetry.addLine("Park complete");
                 }
@@ -1137,10 +1145,10 @@ public class WARHOGAuto extends LinearOpMode {
         }
         else if(blue&&front){
 
-            //1 of 6: Only Park*
+            //1 of 6: Only Park
             if(actionCombination == ActionCombination.PARK_ONLY){
                 //Move off the wall
-                drivetrain.MoveForDis(4,speed);
+                drivetrain.MoveForDis(5,speed);
 
                 //To go to the middle of the backstage
                 if(parkPos == ParkPos.MIDDLE){
@@ -1183,7 +1191,7 @@ public class WARHOGAuto extends LinearOpMode {
                 sleep(1000);
             }
 
-            //2 of 6: Only Spike*
+            //2 of 6: Only Spike
             if(actionCombination == ActionCombination.SPIKE_ONLY){
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
@@ -1366,23 +1374,28 @@ public class WARHOGAuto extends LinearOpMode {
 
                 //To go to the middle of the backstage when spike is in the way
                 if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
-                    //Turn and Move to the backstage
+                    /*//Turn and Move to the backstage
                     drivetrain.RotateForDegree(45*colorMod, speed-.25);
                     drivetrain.MoveForDis(60, speed);
 
                     //Move so not touching pixels hopefully
                     drivetrain.MoveForDis(-4,speed);
 
-                    telemetry.addLine("Park complete");
+                    telemetry.addLine("Park complete");*/
+                    telemetry.addLine("Random Pos is in center, no can do");
+                    telemetry.update();
                 }
                 //To go to the middle of backstage if spike is not in the way
                 if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
                     //To move out to the middle
-                    drivetrain.MoveForDis(45,speed);
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Retract arm to go under the gate
+                    intake.runArm(intake.armMax);
 
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(48, speed);
+                    drivetrain.MoveForDis(96, speed);
 
                     //Move so not touching pixels hopefully
                     drivetrain.MoveForDis(-6,speed);
@@ -1394,9 +1407,12 @@ public class WARHOGAuto extends LinearOpMode {
                     //Move back to be inline
                     drivetrain.MoveForDis(-7,speed-.2);
 
+                    //Retract arm to go under the gate
+                    intake.runArm(intake.armMax);
+
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(42, speed);
+                    drivetrain.MoveForDis(96, speed);
 
                     telemetry.addLine("Park complete");
                 }

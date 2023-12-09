@@ -19,7 +19,7 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
     static final int WidthRectSides = 300;
     static final int HeightRectSides = 450;
     static final int WidthRectCenter = 450;
-    static final int HeightRectCenter = 300;
+    static final int HeightRectCenter = 450;
 
     //Change values here to correctly target the thirds
     static final Point RectLeftTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 - 450, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
@@ -68,13 +68,13 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
         //boolean posCenter = centerValue > PERCENT_WHITE_THRESHOLD;
         //boolean posRight = rightValue > PERCENT_WHITE_THRESHOLD;
 
-        if (leftValue > PERCENT_WHITE_THRESHOLD & leftValue > rightValue & leftValue > centerValue){
+        if (leftValue >= PERCENT_WHITE_THRESHOLD & leftValue > rightValue & leftValue > centerValue){
             location = Location.LEFT;
         }
-        else if (centerValue > PERCENT_WHITE_THRESHOLD & centerValue > leftValue & centerValue > rightValue){
+        else if (centerValue >= PERCENT_WHITE_THRESHOLD & centerValue > leftValue & centerValue > rightValue){
             location = Location.CENTER;
         }
-        else if (rightValue > PERCENT_WHITE_THRESHOLD & rightValue > leftValue & rightValue > centerValue){
+        else if (rightValue >= PERCENT_WHITE_THRESHOLD & rightValue > leftValue & rightValue > centerValue){
             location = Location.RIGHT;
         }
         else{
