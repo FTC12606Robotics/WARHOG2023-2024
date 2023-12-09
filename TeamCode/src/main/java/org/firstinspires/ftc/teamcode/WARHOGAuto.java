@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.apriltag.AprilTagDetection;
+//import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -274,7 +274,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
             }
 
-            //For camera usage in desicion making
+            //For camera usage in decision making
             if (currentGamepad1.left_stick_button && !previousGamepad1.left_stick_button){
                 useCamera = !useCamera;
             }
@@ -550,72 +550,9 @@ public class WARHOGAuto extends LinearOpMode {
 
         //Blocks to run for different start positions
         if(red&&front){
-            //Move off the wall
-            drivetrain.MoveForDis(4,speed);
 
-            //Check if we are going to the backstage middle
-            if(parkPos == parkPos.MIDDLE){
-                drivetrain.MoveForDis(51,speed);
-            }
-
-            //Retract arm to go under gate
-            intake.runArm(intake.armMax);
-
-            //Turn and Move to the backstage
-            drivetrain.RotateForDegree(90*colorMod, speed-.25);
-            drivetrain.MoveForDis(96, speed);
-
-            //Move so not touching pixels hopefully
-            drivetrain.MoveForDis(-6,speed);
-
-            telemetry.addLine("Park complete");
-            telemetry.update();
-        }
-        else if(red&&back){
-            //Move off the wall
-            drivetrain.MoveForDis(4,speed);
-
-            //Check if we are going to the backstage middle
-            if(parkPos == ParkPos.MIDDLE){
-                drivetrain.MoveForDis(51,speed);
-            }
-
-            //Turn and Move to the backstage
-            drivetrain.RotateForDegree(90*colorMod, speed-.25);
-            drivetrain.MoveForDis(48, speed);
-
-            //Move so not touching pixels hopefully
-            drivetrain.MoveForDis(-6,speed);
-
-            telemetry.addLine("Park complete");
-            telemetry.update();
-        }
-        else if(blue&&front){
-            //Move off the wall
-            drivetrain.MoveForDis(4,speed);
-
-            //Check if we are going to the backstage middle
-            if(parkPos == ParkPos.MIDDLE){
-                drivetrain.MoveForDis(51,speed);
-            }
-
-            //Retract arm to go under the gate
-            intake.runArm(intake.armMax);
-
-            //Turn and Move to the backstage
-            drivetrain.RotateForDegree(90*colorMod, speed-.25);
-            drivetrain.MoveForDis(96, speed);
-
-            //Move so not touching pixels hopefully
-            drivetrain.MoveForDis(-6,speed);
-
-            telemetry.addLine("Park complete");
-            telemetry.update();
-        }
-        else if(blue&&back){
-
-            //1 of 6: Only Park
-            if(actionCombination == actionCombination.PARK_ONLY){
+            //1 of 6: Only Park*
+            if(actionCombination == ActionCombination.PARK_ONLY){
                 //Move off the wall
                 drivetrain.MoveForDis(4,speed);
 
@@ -624,9 +561,12 @@ public class WARHOGAuto extends LinearOpMode {
                     //To move out to the middle
                     drivetrain.MoveForDis(51,speed);
 
+                    //Retract arm to go under the gate
+                    intake.runArm(intake.armMax);
+
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(48, speed);
+                    drivetrain.MoveForDis(96, speed);
 
                     //Move so not touching pixels hopefully
                     drivetrain.MoveForDis(-6,speed);
@@ -636,28 +576,29 @@ public class WARHOGAuto extends LinearOpMode {
 
                 //To go to the corner of the backstage
                 else if(parkPos == ParkPos.CORNER){
+                    //Retract arm to go under the gate
+                    intake.runArm(intake.armMax);
+
                     //Turn and Move to the backstage
                     drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(48, speed);
+                    drivetrain.MoveForDis(96, speed);
 
                     //Move so not touching pixels hopefully
                     drivetrain.MoveForDis(-6,speed);
 
                     telemetry.addLine("Park complete");
                 }
+                else{
+                    telemetry.addLine("Park Pos. Not set");
+                }
 
                 telemetry.addLine("Action: PARK_ONLY completed");
+                telemetry.update();
+                sleep(1000);
             }
 
-            /*2 of 8: Only Board
-            if(actionCombination == actionCombination.BOARD_ONLY){
-                //***Go to board***
-                //***Based on random pos place pixel on board***
-                //***Move out of the way***
-            }*/
-
             //2 of 6: Only Spike*
-            if(actionCombination == actionCombination.SPIKE_ONLY){
+            if(actionCombination == ActionCombination.SPIKE_ONLY){
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
@@ -725,7 +666,6 @@ public class WARHOGAuto extends LinearOpMode {
                     drivetrain.RotateForDegree(30, speed-.25);
                 }
 
-
                 telemetry.addLine("Action: SPIKE_ONLY completed");
                 telemetry.update();
                 sleep(1000);
@@ -733,7 +673,7 @@ public class WARHOGAuto extends LinearOpMode {
             }
 
             //3 of 6: Park and Board*
-            if(actionCombination == actionCombination.PARK_BOARD){
+            if(actionCombination == ActionCombination.PARK_BOARD){
                 //Move off the wall
                 drivetrain.MoveForDis(4,speed);
 
@@ -765,32 +705,268 @@ public class WARHOGAuto extends LinearOpMode {
                 }
 
                 telemetry.addLine("Action: PARK_BOARD completed");
+                telemetry.update();
+                sleep(1000);
             }
 
-            /*5 of 8: Spike and Board
-            if(actionCombination == actionCombination.SPIKE_BOARD){
-                //***Place on Spike***
-                //***Move to Board***
-                //***Place on Board***
-                //***Move out of the way/park***
-            }*/
-
             //4 of 6: Park and Spike*
-            if(actionCombination == actionCombination.PARK_SPIKE){
+            if(actionCombination == ActionCombination.PARK_SPIKE){
+                if(randomPos == RandomPos.LEFT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(20, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.CENTER){
+                    //Move off the wall
+                    drivetrain.MoveForDis(14,speed);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.RIGHT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(-30, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.NULL){
+                    telemetry.addLine("randomPos = NULL, can't do anything");
+                }
+                telemetry.update();
+
+                //Realign with wall
+                if(randomPos == RandomPos.LEFT){
+                    drivetrain.RotateForDegree(-20, speed-.25);
+                }
+                else if (randomPos == RandomPos.RIGHT){
+                    drivetrain.RotateForDegree(30, speed-.25);
+                }
+
+                //To go to the middle of the backstage when spike is in the way
+                if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(45*colorMod, speed-.25);
+                    drivetrain.MoveForDis(60, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-4,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the middle of backstage if spike is not in the way
+                if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(45,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Move back to be inline
+                    drivetrain.MoveForDis(-7,speed-.2);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(42, speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                telemetry.update();
+
+                telemetry.addLine("Action: PARK_SPIKE completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //5 of 6: Park, Board, and Spike*
+            if(actionCombination == ActionCombination.PARK_BOARD_SPIKE){
                 //Move off the wall
                 drivetrain.MoveForDis(4,speed);
 
-                //***Based on random pos move to where robot can place down spike***
+                //***Place on spike***
+                //***If not center and need not go to middle to park, realign and go to board***
+                //***Place on board***
+                //***Move away/park***
 
-                //++++CODE inaction 2++++
-                //***Run arm to place spike***
-                //***Open claw, retract arm***
+                telemetry.addLine("Action: PARK_BOARD_SPIKE completed");
+                telemetry.update();
+                sleep(1000);
+            }
 
-                telemetry.addLine("Pixel Placed on Spike");
+            //6 of 6: NONE
+            if(actionCombination == ActionCombination.NONE){
+                telemetry.addLine("Doing Nothing");
+                telemetry.update();
+                sleep(1000);
+            }
 
-                //***Realign with wall***
+            telemetry.update();
+        }
+        else if(red&&back){
 
-                //***Remember to make sure going to the middle does not affect spikes***
+            //1 of 6: Only Park
+            if(actionCombination == ActionCombination.PARK_ONLY){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
+                //To go to the middle of the backstage
+                if(parkPos == ParkPos.MIDDLE){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                else{
+                    telemetry.addLine("Park Pos. Not set");
+                }
+
+                telemetry.addLine("Action: PARK_ONLY completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //2 of 6: Only Spike
+            if(actionCombination == ActionCombination.SPIKE_ONLY){
+                if(randomPos == RandomPos.LEFT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(20, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.CENTER){
+                    //Move off the wall
+                    drivetrain.MoveForDis(14,speed);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.RIGHT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(-30, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.NULL){
+                    telemetry.addLine("randomPos = NULL, can't do anything");
+                }
+                telemetry.update();
+
+                //Realign with wall
+                if(randomPos == RandomPos.LEFT){
+                    drivetrain.RotateForDegree(-20, speed-.25);
+                }
+                else if (randomPos == RandomPos.RIGHT){
+                    drivetrain.RotateForDegree(30, speed-.25);
+                }
+
+                telemetry.addLine("Action: SPIKE_ONLY completed");
+                telemetry.update();
+                sleep(1000);
+
+            }
+
+            //3 of 6: Park and Board*
+            if(actionCombination == ActionCombination.PARK_BOARD){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
                 //To go to the middle of the backstage
                 if(parkPos == ParkPos.MIDDLE){
                     //To move out to the middle
@@ -818,11 +994,125 @@ public class WARHOGAuto extends LinearOpMode {
                     telemetry.addLine("Park complete");
                 }
 
+                telemetry.addLine("Action: PARK_BOARD completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //4 of 6: Park and Spike
+            if(actionCombination == ActionCombination.PARK_SPIKE){
+                if(randomPos == RandomPos.LEFT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(20, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.CENTER){
+                    //Move off the wall
+                    drivetrain.MoveForDis(14,speed);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.RIGHT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(-30, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.NULL){
+                    telemetry.addLine("randomPos = NULL, can't do anything");
+                }
+                telemetry.update();
+
+                //Realign with wall
+                if(randomPos == RandomPos.LEFT){
+                    drivetrain.RotateForDegree(-20, speed-.25);
+                }
+                else if (randomPos == RandomPos.RIGHT){
+                    drivetrain.RotateForDegree(30, speed-.25);
+                }
+
+                //To go to the middle of the backstage when spike is in the way
+                if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(45*colorMod, speed-.25);
+                    drivetrain.MoveForDis(60, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-4,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the middle of backstage if spike is not in the way
+                if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(45,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Move back to be inline
+                    drivetrain.MoveForDis(-7,speed-.2);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(42, speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                telemetry.update();
+
                 telemetry.addLine("Action: PARK_SPIKE completed");
+                telemetry.update();
+                sleep(1000);
             }
 
             //5 of 6: Park, Board, and Spike*
-            if(actionCombination == actionCombination.PARK_BOARD_SPIKE){
+            if(actionCombination == ActionCombination.PARK_BOARD_SPIKE){
                 //Move off the wall
                 drivetrain.MoveForDis(4,speed);
 
@@ -832,18 +1122,617 @@ public class WARHOGAuto extends LinearOpMode {
                 //***Move away/park***
 
                 telemetry.addLine("Action: PARK_BOARD_SPIKE completed");
+                telemetry.update();
+                sleep(1000);
             }
 
             //6 of 6: NONE
-            if(actionCombination == actionCombination.NONE){
+            if(actionCombination == ActionCombination.NONE){
                 telemetry.addLine("Doing Nothing");
+                telemetry.update();
+                sleep(1000);
             }
 
+            telemetry.update();
+        }
+        else if(blue&&front){
 
-            //To not park at all
-           /* else if(!willPark && parkPos == parkPos.NO){
-                telemetry.addLine("Not Parking");
+            //1 of 6: Only Park*
+            if(actionCombination == ActionCombination.PARK_ONLY){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
+                //To go to the middle of the backstage
+                if(parkPos == ParkPos.MIDDLE){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Retract arm to go under the gate
+                    intake.runArm(intake.armMax);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(96, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Retract arm to go under the gate
+                    intake.runArm(intake.armMax);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(96, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                else{
+                    telemetry.addLine("Park Pos. Not set");
+                }
+
+                telemetry.addLine("Action: PARK_ONLY completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //2 of 6: Only Spike*
+            if(actionCombination == ActionCombination.SPIKE_ONLY){
+                if(randomPos == RandomPos.LEFT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(20, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.CENTER){
+                    //Move off the wall
+                    drivetrain.MoveForDis(14,speed);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.RIGHT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(-30, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.NULL){
+                    telemetry.addLine("randomPos = NULL, can't do anything");
+                }
+                telemetry.update();
+
+                //Realign with wall
+                if(randomPos == RandomPos.LEFT){
+                    drivetrain.RotateForDegree(-20, speed-.25);
+                }
+                else if (randomPos == RandomPos.RIGHT){
+                    drivetrain.RotateForDegree(30, speed-.25);
+                }
+
+                telemetry.addLine("Action: SPIKE_ONLY completed");
+                telemetry.update();
+                sleep(1000);
+
+            }
+
+            //3 of 6: Park and Board*
+            if(actionCombination == ActionCombination.PARK_BOARD){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
+                //To go to the middle of the backstage
+                if(parkPos == ParkPos.MIDDLE){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+
+                telemetry.addLine("Action: PARK_BOARD completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //4 of 6: Park and Spike*
+            if(actionCombination == ActionCombination.PARK_SPIKE){
+                if(randomPos == RandomPos.LEFT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(20, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.CENTER){
+                    //Move off the wall
+                    drivetrain.MoveForDis(14,speed);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.RIGHT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(-30, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.NULL){
+                    telemetry.addLine("randomPos = NULL, can't do anything");
+                }
+                telemetry.update();
+
+                //Realign with wall
+                if(randomPos == RandomPos.LEFT){
+                    drivetrain.RotateForDegree(-20, speed-.25);
+                }
+                else if (randomPos == RandomPos.RIGHT){
+                    drivetrain.RotateForDegree(30, speed-.25);
+                }
+
+                //To go to the middle of the backstage when spike is in the way
+                if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(45*colorMod, speed-.25);
+                    drivetrain.MoveForDis(60, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-4,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the middle of backstage if spike is not in the way
+                if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(45,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Move back to be inline
+                    drivetrain.MoveForDis(-7,speed-.2);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(42, speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                telemetry.update();
+
+                telemetry.addLine("Action: PARK_SPIKE completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //5 of 6: Park, Board, and Spike*
+            if(actionCombination == ActionCombination.PARK_BOARD_SPIKE){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
+                //***Place on spike***
+                //***If not center and need not go to middle to park, realign and go to board***
+                //***Place on board***
+                //***Move away/park***
+
+                telemetry.addLine("Action: PARK_BOARD_SPIKE completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //6 of 6: NONE
+            if(actionCombination == ActionCombination.NONE){
+                telemetry.addLine("Doing Nothing");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            telemetry.update();
+        }
+        else if(blue&&back){
+
+            //1 of 6: Only Park
+            if(actionCombination == ActionCombination.PARK_ONLY){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
+                //To go to the middle of the backstage
+                if(parkPos == ParkPos.MIDDLE){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                else{
+                    telemetry.addLine("Park Pos. Not set");
+                }
+
+                telemetry.addLine("Action: PARK_ONLY completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            /*2 of 8: Only Board
+            if(actionCombination == actionCombination.BOARD_ONLY){
+                //***Go to board***
+                //***Based on random pos place pixel on board***
+                //***Move out of the way***
             }*/
+
+            //2 of 6: Only Spike
+            if(actionCombination == ActionCombination.SPIKE_ONLY){
+                if(randomPos == RandomPos.LEFT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(20, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.CENTER){
+                    //Move off the wall
+                    drivetrain.MoveForDis(14,speed);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.RIGHT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(-30, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.NULL){
+                    telemetry.addLine("randomPos = NULL, can't do anything");
+                }
+                telemetry.update();
+
+                //Realign with wall
+                if(randomPos == RandomPos.LEFT){
+                    drivetrain.RotateForDegree(-20, speed-.25);
+                }
+                else if (randomPos == RandomPos.RIGHT){
+                    drivetrain.RotateForDegree(30, speed-.25);
+                }
+
+                telemetry.addLine("Action: SPIKE_ONLY completed");
+                telemetry.update();
+                sleep(1000);
+
+            }
+
+            //3 of 6: Park and Board*
+            if(actionCombination == ActionCombination.PARK_BOARD){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
+                //To go to the middle of the backstage
+                if(parkPos == ParkPos.MIDDLE){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(51,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+
+                telemetry.addLine("Action: PARK_BOARD completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            /*5 of 8: Spike and Board
+            if(actionCombination == actionCombination.SPIKE_BOARD){
+                //***Place on Spike***
+                //***Move to Board***
+                //***Place on Board***
+                //***Move out of the way/park***
+            }*/
+
+            //4 of 6: Park and Spike
+            if(actionCombination == ActionCombination.PARK_SPIKE){
+                if(randomPos == RandomPos.LEFT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(20, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.CENTER){
+                    //Move off the wall
+                    drivetrain.MoveForDis(14,speed);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.RIGHT){
+                    //Move off the wall
+                    drivetrain.MoveForDis(10,speed);
+
+                    //Rotate for arm to place pixel
+                    drivetrain.RotateForDegree(-30, speed-.25);
+
+                    //Run arm to place pixel on spike
+                    intake.runArm(.10);
+                    sleep(1000);
+
+                    //Open claw, retract arm
+                    intake.openClaw();
+                    sleep(1000);
+                    intake.closeClaw();
+                    intake.runArm(.85);
+
+                    telemetry.addLine("Pixel Placed on Spike");
+                }
+                else if(randomPos == RandomPos.NULL){
+                    telemetry.addLine("randomPos = NULL, can't do anything");
+                }
+                telemetry.update();
+
+                //Realign with wall
+                if(randomPos == RandomPos.LEFT){
+                    drivetrain.RotateForDegree(-20, speed-.25);
+                }
+                else if (randomPos == RandomPos.RIGHT){
+                    drivetrain.RotateForDegree(30, speed-.25);
+                }
+
+                //To go to the middle of the backstage when spike is in the way
+                if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(45*colorMod, speed-.25);
+                    drivetrain.MoveForDis(60, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-4,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the middle of backstage if spike is not in the way
+                if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                    //To move out to the middle
+                    drivetrain.MoveForDis(45,speed);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(48, speed);
+
+                    //Move so not touching pixels hopefully
+                    drivetrain.MoveForDis(-6,speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                //To go to the corner of the backstage
+                else if(parkPos == ParkPos.CORNER){
+                    //Move back to be inline
+                    drivetrain.MoveForDis(-7,speed-.2);
+
+                    //Turn and Move to the backstage
+                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                    drivetrain.MoveForDis(42, speed);
+
+                    telemetry.addLine("Park complete");
+                }
+                telemetry.update();
+
+                telemetry.addLine("Action: PARK_SPIKE completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //5 of 6: Park, Board, and Spike*
+            if(actionCombination == ActionCombination.PARK_BOARD_SPIKE){
+                //Move off the wall
+                drivetrain.MoveForDis(4,speed);
+
+                //***Place on spike***
+                //***If not center and need not go to middle to park, realign and go to board***
+                //***Place on board***
+                //***Move away/park***
+
+                telemetry.addLine("Action: PARK_BOARD_SPIKE completed");
+                telemetry.update();
+                sleep(1000);
+            }
+
+            //6 of 6: NONE
+            if(actionCombination == ActionCombination.NONE){
+                telemetry.addLine("Doing Nothing");
+                telemetry.update();
+                sleep(1000);
+            }
 
             telemetry.update();
         }
