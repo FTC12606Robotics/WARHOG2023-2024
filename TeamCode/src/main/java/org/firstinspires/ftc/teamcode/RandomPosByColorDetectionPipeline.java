@@ -19,7 +19,7 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
     static final int WidthRectSides = 300;
     static final int HeightRectSides = 450;
     static final int WidthRectCenter = 450;
-    static final int HeightRectCenter = 450;
+    static final int HeightRectCenter = 300;
 
     //Change values here to correctly target the thirds
     static final Point RectLeftTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 - 450, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);

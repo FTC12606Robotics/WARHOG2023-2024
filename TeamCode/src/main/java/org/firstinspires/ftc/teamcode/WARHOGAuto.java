@@ -597,7 +597,7 @@ public class WARHOGAuto extends LinearOpMode {
                 sleep(1000);
             }
 
-            //2 of 6: Only Spike*
+            //2 of 6: Only Spike
             if(actionCombination == ActionCombination.SPIKE_ONLY){
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
@@ -770,16 +770,18 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 telemetry.update();
 
-                //Realign with wall
-                if(randomPos == RandomPos.LEFT){
-                    drivetrain.RotateForDegree(-20, speed-.25);
-                }
-                else if (randomPos == RandomPos.RIGHT){
-                    drivetrain.RotateForDegree(30, speed-.25);
-                }
+                //If randomPos is not NULL attempt to park
+                if(randomPos != RandomPos.NULL){
+                    //Realign with wall
+                    if(randomPos == RandomPos.LEFT){
+                        drivetrain.RotateForDegree(-20, speed-.25);
+                    }
+                    else if (randomPos == RandomPos.RIGHT){
+                        drivetrain.RotateForDegree(30, speed-.25);
+                    }
 
-                //To go to the middle of the backstage when spike is in the way
-                if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                    //To go to the middle of the backstage when spike is in the way
+                    if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
                     /*//Turn and Move to the backstage
                     drivetrain.RotateForDegree(45*colorMod, speed-.25);
                     drivetrain.MoveForDis(60, speed);
@@ -788,41 +790,46 @@ public class WARHOGAuto extends LinearOpMode {
                     drivetrain.MoveForDis(-4,speed);
 
                     telemetry.addLine("Park complete");*/
-                    telemetry.addLine("Random Pos is in center, no can do");
+                        telemetry.addLine("Random Pos is in center, no can do");
+                        telemetry.update();
+                    }
+                    //To go to the middle of backstage if spike is not in the way
+                    if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                        //To move out to the middle
+                        drivetrain.MoveForDis(51,speed);
+
+                        //Retract arm to go under the gate
+                        intake.runArm(intake.armMax);
+
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.MoveForDis(96, speed);
+
+                        //Move so not touching pixels hopefully
+                        drivetrain.MoveForDis(-6,speed);
+
+                        telemetry.addLine("Park complete");
+                    }
+                    //To go to the corner of the backstage
+                    else if(parkPos == ParkPos.CORNER){
+                        //Move back to be inline
+                        drivetrain.MoveForDis(-7,speed-.2);
+
+                        //Retract arm to go under the gate
+                        intake.runArm(intake.armMax);
+
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.MoveForDis(96, speed);
+
+                        telemetry.addLine("Park complete");
+                    }
                     telemetry.update();
                 }
-                //To go to the middle of backstage if spike is not in the way
-                if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
-                    //To move out to the middle
-                    drivetrain.MoveForDis(51,speed);
-
-                    //Retract arm to go under the gate
-                    intake.runArm(intake.armMax);
-
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(96, speed);
-
-                    //Move so not touching pixels hopefully
-                    drivetrain.MoveForDis(-6,speed);
-
-                    telemetry.addLine("Park complete");
+                else {
+                    //****Should it park?****
+                    telemetry.addLine("NUll can't move");
                 }
-                //To go to the corner of the backstage
-                else if(parkPos == ParkPos.CORNER){
-                    //Move back to be inline
-                    drivetrain.MoveForDis(-7,speed-.2);
-
-                    //Retract arm to go under the gate
-                    intake.runArm(intake.armMax);
-
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(96, speed);
-
-                    telemetry.addLine("Park complete");
-                }
-                telemetry.update();
 
                 telemetry.addLine("Action: PARK_SPIKE completed");
                 telemetry.update();
@@ -1068,51 +1075,58 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 telemetry.update();
 
-                //Realign with wall
-                if(randomPos == RandomPos.LEFT){
-                    drivetrain.RotateForDegree(-20, speed-.25);
+                //If randomPos is not NULL attempt to park
+                if (randomPos != RandomPos.NULL){
+                    //Realign with wall
+                    if(randomPos == RandomPos.LEFT){
+                        drivetrain.RotateForDegree(-20, speed-.25);
+                    }
+                    else if (randomPos == RandomPos.RIGHT){
+                        drivetrain.RotateForDegree(30, speed-.25);
+                    }
+
+                    //To go to the middle of the backstage when spike is in the way
+                    if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(45*colorMod, speed-.25);
+                        drivetrain.MoveForDis(60, speed);
+
+                        //Move so not touching pixels hopefully
+                        drivetrain.MoveForDis(-4,speed);
+
+                        telemetry.addLine("Park complete");
+                    }
+                    //To go to the middle of backstage if spike is not in the way
+                    if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                        //To move out to the middle
+                        drivetrain.MoveForDis(45,speed);
+
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.MoveForDis(48, speed);
+
+                        //Move so not touching pixels hopefully
+                        drivetrain.MoveForDis(-6,speed);
+
+                        telemetry.addLine("Park complete");
+                    }
+                    //To go to the corner of the backstage
+                    else if(parkPos == ParkPos.CORNER){
+                        //Move back to be inline
+                        drivetrain.MoveForDis(-7,speed-.2);
+
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.MoveForDis(42, speed);
+
+                        telemetry.addLine("Park complete");
+                    }
+                    telemetry.update();
                 }
-                else if (randomPos == RandomPos.RIGHT){
-                    drivetrain.RotateForDegree(30, speed-.25);
+                else {
+                    //****Should it park?****
+                    telemetry.addLine("NUll can't move");
                 }
-
-                //To go to the middle of the backstage when spike is in the way
-                if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(45*colorMod, speed-.25);
-                    drivetrain.MoveForDis(60, speed);
-
-                    //Move so not touching pixels hopefully
-                    drivetrain.MoveForDis(-4,speed);
-
-                    telemetry.addLine("Park complete");
-                }
-                //To go to the middle of backstage if spike is not in the way
-                if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
-                    //To move out to the middle
-                    drivetrain.MoveForDis(45,speed);
-
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(48, speed);
-
-                    //Move so not touching pixels hopefully
-                    drivetrain.MoveForDis(-6,speed);
-
-                    telemetry.addLine("Park complete");
-                }
-                //To go to the corner of the backstage
-                else if(parkPos == ParkPos.CORNER){
-                    //Move back to be inline
-                    drivetrain.MoveForDis(-7,speed-.2);
-
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(42, speed);
-
-                    telemetry.addLine("Park complete");
-                }
-                telemetry.update();
 
                 telemetry.addLine("Action: PARK_SPIKE completed");
                 telemetry.update();
@@ -1364,16 +1378,18 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 telemetry.update();
 
-                //Realign with wall
-                if(randomPos == RandomPos.LEFT){
-                    drivetrain.RotateForDegree(-20, speed-.25);
-                }
-                else if (randomPos == RandomPos.RIGHT){
-                    drivetrain.RotateForDegree(30, speed-.25);
-                }
+                //If randomPos is not NULL attempt to park
+                if(randomPos != RandomPos.NULL){
+                    //Realign with wall
+                    if(randomPos == RandomPos.LEFT){
+                        drivetrain.RotateForDegree(-20, speed-.25);
+                    }
+                    else if (randomPos == RandomPos.RIGHT){
+                        drivetrain.RotateForDegree(30, speed-.25);
+                    }
 
-                //To go to the middle of the backstage when spike is in the way
-                if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                    //To go to the middle of the backstage when spike is in the way
+                    if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
                     /*//Turn and Move to the backstage
                     drivetrain.RotateForDegree(45*colorMod, speed-.25);
                     drivetrain.MoveForDis(60, speed);
@@ -1382,41 +1398,47 @@ public class WARHOGAuto extends LinearOpMode {
                     drivetrain.MoveForDis(-4,speed);
 
                     telemetry.addLine("Park complete");*/
-                    telemetry.addLine("Random Pos is in center, no can do");
+                        telemetry.addLine("Random Pos is in center, no can do");
+                        telemetry.update();
+                    }
+                    //To go to the middle of backstage if spike is not in the way
+                    if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                        //To move out to the middle
+                        drivetrain.MoveForDis(51,speed);
+
+                        //Retract arm to go under the gate
+                        intake.runArm(intake.armMax);
+
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.MoveForDis(96, speed);
+
+                        //Move so not touching pixels hopefully
+                        drivetrain.MoveForDis(-6,speed);
+
+                        telemetry.addLine("Park complete");
+                    }
+                    //To go to the corner of the backstage
+                    else if(parkPos == ParkPos.CORNER){
+                        //Move back to be inline
+                        drivetrain.MoveForDis(-7,speed-.2);
+
+                        //Retract arm to go under the gate
+                        intake.runArm(intake.armMax);
+
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.MoveForDis(96, speed);
+
+                        telemetry.addLine("Park complete");
+                    }
                     telemetry.update();
                 }
-                //To go to the middle of backstage if spike is not in the way
-                if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
-                    //To move out to the middle
-                    drivetrain.MoveForDis(51,speed);
-
-                    //Retract arm to go under the gate
-                    intake.runArm(intake.armMax);
-
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(96, speed);
-
-                    //Move so not touching pixels hopefully
-                    drivetrain.MoveForDis(-6,speed);
-
-                    telemetry.addLine("Park complete");
+                else {
+                    //****Should it park?****
+                    telemetry.addLine("NUll can't move");
                 }
-                //To go to the corner of the backstage
-                else if(parkPos == ParkPos.CORNER){
-                    //Move back to be inline
-                    drivetrain.MoveForDis(-7,speed-.2);
 
-                    //Retract arm to go under the gate
-                    intake.runArm(intake.armMax);
-
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(96, speed);
-
-                    telemetry.addLine("Park complete");
-                }
-                telemetry.update();
 
                 telemetry.addLine("Action: PARK_SPIKE completed");
                 telemetry.update();
@@ -1677,51 +1699,58 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 telemetry.update();
 
-                //Realign with wall
-                if(randomPos == RandomPos.LEFT){
-                    drivetrain.RotateForDegree(-20, speed-.25);
+                //If randomPos is not NULL attempt to park
+                if(randomPos != RandomPos.NULL){
+                    //Realign with wall
+                    if(randomPos == RandomPos.LEFT){
+                        drivetrain.RotateForDegree(-20, speed-.25);
+                    }
+                    else if (randomPos == RandomPos.RIGHT){
+                        drivetrain.RotateForDegree(30, speed-.25);
+                    }
+
+                    //To go to the middle of the backstage when spike is in the way
+                    if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(45*colorMod, speed-.25);
+                        drivetrain.MoveForDis(60, speed);
+
+                        //Move so not touching pixels hopefully
+                        drivetrain.MoveForDis(-4,speed);
+
+                        telemetry.addLine("Park complete");
+                    }
+                    //To go to the middle of backstage if spike is not in the way
+                    if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                        //To move out to the middle
+                        drivetrain.MoveForDis(45,speed);
+
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.MoveForDis(48, speed);
+
+                        //Move so not touching pixels hopefully
+                        drivetrain.MoveForDis(-6,speed);
+
+                        telemetry.addLine("Park complete");
+                    }
+                    //To go to the corner of the backstage
+                    else if(parkPos == ParkPos.CORNER){
+                        //Move back to be inline
+                        drivetrain.MoveForDis(-7,speed-.2);
+
+                        //Turn and Move to the backstage
+                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.MoveForDis(42, speed);
+
+                        telemetry.addLine("Park complete");
+                    }
+                    telemetry.update();
                 }
-                else if (randomPos == RandomPos.RIGHT){
-                    drivetrain.RotateForDegree(30, speed-.25);
+                else {
+                    //****Should it park?****
+                    telemetry.addLine("NUll can't move");
                 }
-
-                //To go to the middle of the backstage when spike is in the way
-                if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(45*colorMod, speed-.25);
-                    drivetrain.MoveForDis(60, speed);
-
-                    //Move so not touching pixels hopefully
-                    drivetrain.MoveForDis(-4,speed);
-
-                    telemetry.addLine("Park complete");
-                }
-                //To go to the middle of backstage if spike is not in the way
-                if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
-                    //To move out to the middle
-                    drivetrain.MoveForDis(45,speed);
-
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(48, speed);
-
-                    //Move so not touching pixels hopefully
-                    drivetrain.MoveForDis(-6,speed);
-
-                    telemetry.addLine("Park complete");
-                }
-                //To go to the corner of the backstage
-                else if(parkPos == ParkPos.CORNER){
-                    //Move back to be inline
-                    drivetrain.MoveForDis(-7,speed-.2);
-
-                    //Turn and Move to the backstage
-                    drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                    drivetrain.MoveForDis(42, speed);
-
-                    telemetry.addLine("Park complete");
-                }
-                telemetry.update();
 
                 telemetry.addLine("Action: PARK_SPIKE completed");
                 telemetry.update();
