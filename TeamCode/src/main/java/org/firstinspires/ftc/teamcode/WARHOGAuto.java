@@ -10,13 +10,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
-import org.opencv.core.Mat;
-import org.opencv.core.Core;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 
@@ -38,7 +31,6 @@ public class WARHOGAuto extends LinearOpMode {
 
     OpenCvCamera camera;
     //AprilTagDetectionPipeline aprilTagDetectionPipeline;
-    //ObjectDetectionPipeline objectDetectionPipeline;
     RandomPosByColorDetectionPipeline randomPosByColorDetectionPipeline;
 
 
@@ -50,8 +42,6 @@ public class WARHOGAuto extends LinearOpMode {
     static final double FEET_PER_METER = 3.28084;
 
     int colorMod = 0;
-    //int posMod = 0;
-    //int cycles = 2;
 
     boolean front=false, back=false, red=false, blue=false; //Bools to set position
 
@@ -98,11 +88,9 @@ public class WARHOGAuto extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         //aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
-        //objectDetectionPipeline = new ObjectDetectionPipeline();
         randomPosByColorDetectionPipeline = new RandomPosByColorDetectionPipeline();
 
         //camera.setPipeline(aprilTagDetectionPipeline);
-        //camera.setPipeline(objectDetectionPipeline);
         camera.setPipeline(randomPosByColorDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -279,26 +267,6 @@ public class WARHOGAuto extends LinearOpMode {
                 useCamera = !useCamera;
             }
 
-            /*//For sensing which third the white pixel is in
-            int lumaLeft = objectDetectionPipeline.avgLEFT;
-            int lumaCenter = objectDetectionPipeline.avgCENTER;
-            int lumaRight = objectDetectionPipeline.avgRIGHT;
-            //===Test to see if it helps with the memory leak=== ++++++It causes a fatal error++++++
-            //objectDetectionPipeline.releaseMats();
-            //Find and set which random pos. the pixel/team art is in.
-            if(lumaLeft > lumaCenter & lumaLeft > lumaRight ){
-                randomPos = RandomPos.LEFT;
-            }
-            else if(lumaCenter > lumaLeft & lumaCenter > lumaRight ){
-                randomPos = RandomPos.CENTER;
-            }
-            else if(lumaRight > lumaCenter & lumaRight > lumaLeft ){
-                randomPos = RandomPos.RIGHT;
-            }
-            else{
-                telemetry.addLine("Error with luma sensing");
-            }*/
-
             //OpenCV Pipeline 2 w/ RandomPosByColorDetectionPipeline
             /*switch (randomPosByColorDetectionPipeline.getLocation()){
                 case LEFT:
@@ -348,12 +316,6 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.addData("Right percentage", Math.round(randomPosByColorDetectionPipeline.rightValue * 100) + "%");
             telemetry.addData("Sensed Pos.", randomPosByColorDetectionPipeline.location);
             telemetry.addData("Use Camera?", useCamera);
-            /*
-            telemetry.addLine();
-            telemetry.addData("lumaLeft", lumaLeft);
-            telemetry.addData("lumaCenter", lumaCenter);
-            telemetry.addData("lumaRight", lumaRight);
-            */
 
             /*ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -406,7 +368,6 @@ public class WARHOGAuto extends LinearOpMode {
                     telemetry.addLine("\nBut we HAVE seen the tag before; last seen at:");
                     tagToTelemetry(tagOfInterest);
                 }
-
             }*/
 
             telemetry.update();
@@ -432,11 +393,9 @@ public class WARHOGAuto extends LinearOpMode {
         }
         switch (startPosPosition){
             case FRONT:
-                //posMod = -1;
                 front = true;
                 break;
             case BACK:
-                //posMod = 1;
                 back = true;
                 break;
         }
@@ -710,13 +669,14 @@ public class WARHOGAuto extends LinearOpMode {
             }
 
             //4 of 6: Park and Spike*
-            if(actionCombination == ActionCombination.PARK_SPIKE){
-                if(randomPos == RandomPos.LEFT){
+            if(actionCombination == ActionCombination.PARK_SPIKE) {
+                //What to do if the randomPos is Left
+                if (randomPos == RandomPos.LEFT) {
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(10, speed);
 
                     //Rotate for arm to place pixel
-                    drivetrain.RotateForDegree(20, speed-.25);
+                    drivetrain.RotateForDegree(20, speed - .25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
@@ -730,9 +690,10 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == RandomPos.CENTER){
+                //What to do if the randomPos is Center
+                else if (randomPos == RandomPos.CENTER) {
                     //Move off the wall
-                    drivetrain.MoveForDis(14,speed);
+                    drivetrain.MoveForDis(14, speed);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
@@ -746,12 +707,13 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == RandomPos.RIGHT){
+                //What to do if the randomPos is Right
+                else if (randomPos == RandomPos.RIGHT) {
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(10, speed);
 
                     //Rotate for arm to place pixel
-                    drivetrain.RotateForDegree(-30, speed-.25);
+                    drivetrain.RotateForDegree(-30, speed - .25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
@@ -765,70 +727,63 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == RandomPos.NULL){
+                //To take an exception, **might be put to else OR put in front and if Null set to Left**
+                else if (randomPos == RandomPos.NULL) {
                     telemetry.addLine("randomPos = NULL, can't do anything");
                 }
                 telemetry.update();
 
                 //If randomPos is not NULL attempt to park
-                if(randomPos != RandomPos.NULL){
+                if (randomPos != RandomPos.NULL) {
                     //Realign with wall
-                    if(randomPos == RandomPos.LEFT){
-                        drivetrain.RotateForDegree(-20, speed-.25);
+                    if (randomPos == RandomPos.LEFT) {
+                        drivetrain.RotateForDegree(-20, speed - .25);
                     }
-                    else if (randomPos == RandomPos.RIGHT){
-                        drivetrain.RotateForDegree(30, speed-.25);
+                    else if (randomPos == RandomPos.RIGHT) {
+                        drivetrain.RotateForDegree(30, speed - .25);
                     }
 
                     //To go to the middle of the backstage when spike is in the way
-                    if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
-                    /*//Turn and Move to the backstage
-                    drivetrain.RotateForDegree(45*colorMod, speed-.25);
-                    drivetrain.MoveForDis(60, speed);
-
-                    //Move so not touching pixels hopefully
-                    drivetrain.MoveForDis(-4,speed);
-
-                    telemetry.addLine("Park complete");*/
-                        telemetry.addLine("Random Pos is in center, no can do");
+                    if (parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER) {
+                        telemetry.addLine("Can't park in Middle from front when randomPos is the center");
                         telemetry.update();
                     }
                     //To go to the middle of backstage if spike is not in the way
-                    if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                    else if (parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER) {
                         //To move out to the middle
-                        drivetrain.MoveForDis(51,speed);
+                        drivetrain.MoveForDis(51, speed);
 
                         //Retract arm to go under the gate
                         intake.runArm(intake.armMax);
 
                         //Turn and Move to the backstage
-                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.RotateForDegree(90 * colorMod, speed - .25);
                         drivetrain.MoveForDis(96, speed);
 
                         //Move so not touching pixels hopefully
-                        drivetrain.MoveForDis(-6,speed);
+                        drivetrain.MoveForDis(-6, speed);
 
                         telemetry.addLine("Park complete");
                     }
                     //To go to the corner of the backstage
-                    else if(parkPos == ParkPos.CORNER){
-                        //Move back to be inline
-                        drivetrain.MoveForDis(-7,speed-.2);
+                    else if (parkPos == ParkPos.CORNER) {
+                            //Move back to be inline
+                            drivetrain.MoveForDis(-7, speed - .2);
 
-                        //Retract arm to go under the gate
-                        intake.runArm(intake.armMax);
+                            //Retract arm to go under the gate
+                            intake.runArm(intake.armMax);
 
-                        //Turn and Move to the backstage
-                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
-                        drivetrain.MoveForDis(96, speed);
+                            //Turn and Move to the backstage
+                            drivetrain.RotateForDegree(90 * colorMod, speed - .25);
+                            drivetrain.MoveForDis(96, speed);
 
-                        telemetry.addLine("Park complete");
+                            telemetry.addLine("Park complete");
+                        }
+                        telemetry.update();
                     }
-                    telemetry.update();
-                }
                 else {
                     //****Should it park?****
-                    telemetry.addLine("NUll can't move");
+                    telemetry.addLine("NULL can't move");
                 }
 
                 telemetry.addLine("Action: PARK_SPIKE completed");
@@ -1016,7 +971,8 @@ public class WARHOGAuto extends LinearOpMode {
 
             //4 of 6: Park and Spike
             if(actionCombination == ActionCombination.PARK_SPIKE){
-                if(randomPos == RandomPos.LEFT){
+                //What to do if the randomPos is Left
+                if (randomPos == RandomPos.LEFT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
 
@@ -1035,7 +991,8 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == RandomPos.CENTER){
+                //What to do if the randomPos is Center
+                else if (randomPos == RandomPos.CENTER){
                     //Move off the wall
                     drivetrain.MoveForDis(14,speed);
 
@@ -1051,7 +1008,8 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == RandomPos.RIGHT){
+                //What to do if the randomPos is Right
+                else if (randomPos == RandomPos.RIGHT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
 
@@ -1070,7 +1028,8 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
-                else if(randomPos == RandomPos.NULL){
+                //To take an exception, **might be put to else OR put in front and if Null set to Left**
+                else if (randomPos == RandomPos.NULL){
                     telemetry.addLine("randomPos = NULL, can't do anything");
                 }
                 telemetry.update();
@@ -1078,7 +1037,7 @@ public class WARHOGAuto extends LinearOpMode {
                 //If randomPos is not NULL attempt to park
                 if (randomPos != RandomPos.NULL){
                     //Realign with wall
-                    if(randomPos == RandomPos.LEFT){
+                    if (randomPos == RandomPos.LEFT){
                         drivetrain.RotateForDegree(-20, speed-.25);
                     }
                     else if (randomPos == RandomPos.RIGHT){
@@ -1086,7 +1045,7 @@ public class WARHOGAuto extends LinearOpMode {
                     }
 
                     //To go to the middle of the backstage when spike is in the way
-                    if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
+                    if (parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
                         //Turn and Move to the backstage
                         drivetrain.RotateForDegree(45*colorMod, speed-.25);
                         drivetrain.MoveForDis(60, speed);
@@ -1097,7 +1056,7 @@ public class WARHOGAuto extends LinearOpMode {
                         telemetry.addLine("Park complete");
                     }
                     //To go to the middle of backstage if spike is not in the way
-                    if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
+                    if (parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
                         //To move out to the middle
                         drivetrain.MoveForDis(45,speed);
 
@@ -1111,7 +1070,7 @@ public class WARHOGAuto extends LinearOpMode {
                         telemetry.addLine("Park complete");
                     }
                     //To go to the corner of the backstage
-                    else if(parkPos == ParkPos.CORNER){
+                    else if (parkPos == ParkPos.CORNER){
                         //Move back to be inline
                         drivetrain.MoveForDis(-7,speed-.2);
 
@@ -1267,7 +1226,7 @@ public class WARHOGAuto extends LinearOpMode {
                 telemetry.update();
 
                 //Realign with wall
-                if(randomPos == RandomPos.LEFT){
+                if (randomPos == RandomPos.LEFT){
                     drivetrain.RotateForDegree(-20, speed-.25);
                 }
                 else if (randomPos == RandomPos.RIGHT){
@@ -1319,6 +1278,7 @@ public class WARHOGAuto extends LinearOpMode {
 
             //4 of 6: Park and Spike*
             if(actionCombination == ActionCombination.PARK_SPIKE){
+                //What to do if the randomPos is Left
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
@@ -1338,6 +1298,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
+                //What to do if the randomPos is Center
                 else if(randomPos == RandomPos.CENTER){
                     //Move off the wall
                     drivetrain.MoveForDis(14,speed);
@@ -1354,6 +1315,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
+                //What to do if the randomPos is Right
                 else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
@@ -1373,6 +1335,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
+                //To take an exception, **might be put to else OR put in front and if Null set to Left**
                 else if(randomPos == RandomPos.NULL){
                     telemetry.addLine("randomPos = NULL, can't do anything");
                 }
@@ -1390,15 +1353,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     //To go to the middle of the backstage when spike is in the way
                     if(parkPos == ParkPos.MIDDLE && randomPos == RandomPos.CENTER){
-                    /*//Turn and Move to the backstage
-                    drivetrain.RotateForDegree(45*colorMod, speed-.25);
-                    drivetrain.MoveForDis(60, speed);
-
-                    //Move so not touching pixels hopefully
-                    drivetrain.MoveForDis(-4,speed);
-
-                    telemetry.addLine("Park complete");*/
-                        telemetry.addLine("Random Pos is in center, no can do");
+                        telemetry.addLine("Can't park in Middle from front when randomPos is the center");
                         telemetry.update();
                     }
                     //To go to the middle of backstage if spike is not in the way
@@ -1640,6 +1595,7 @@ public class WARHOGAuto extends LinearOpMode {
 
             //4 of 6: Park and Spike
             if(actionCombination == ActionCombination.PARK_SPIKE){
+                //What to do if the randomPos is Left
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
@@ -1659,6 +1615,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
+                //What to do if the randomPos is Center
                 else if(randomPos == RandomPos.CENTER){
                     //Move off the wall
                     drivetrain.MoveForDis(14,speed);
@@ -1675,6 +1632,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
+                //What to do if the randomPos is Right
                 else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
                     drivetrain.MoveForDis(10,speed);
@@ -1694,12 +1652,13 @@ public class WARHOGAuto extends LinearOpMode {
 
                     telemetry.addLine("Pixel Placed on Spike");
                 }
+                //To take an exception, **might be put to else OR put in front and if Null set to Left**
                 else if(randomPos == RandomPos.NULL){
                     telemetry.addLine("randomPos = NULL, can't do anything");
                 }
                 telemetry.update();
 
-                //If randomPos is not NULL attempt to park
+                //Attempt to park if randomPos is not Null
                 if(randomPos != RandomPos.NULL){
                     //Realign with wall
                     if(randomPos == RandomPos.LEFT){
@@ -1720,7 +1679,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                         telemetry.addLine("Park complete");
                     }
-                    //To go to the middle of backstage if spike is not in the way
+                    //To go to the middle of the backstage when spike is not in the way
                     if(parkPos == ParkPos.MIDDLE && randomPos != RandomPos.CENTER){
                         //To move out to the middle
                         drivetrain.MoveForDis(45,speed);
@@ -1782,108 +1741,6 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.update();
         }
 
-
-        /*
-        //2022-2023 Code
-
-        // drive to pole and raise slide
-        drivetrain.MoveForDis(52.5, speed);
-        if(cycles>-1) {
-            drivetrain.rotateToPosition(-43 * posMod - (posMod+1), speed - .25);
-            drivetrain.MoveForDis(-.75, speed);
-            telemetry.addLine("just before slides");
-            telemetry.update();
-            outtake.setHeight(Outtake.Height.HIGH);
-            telemetry.addLine("height added");
-            telemetry.update();
-            sleep(200);
-            outtake.setHeight(1500);
-            outtake.openClaw();
-            outtake.setHeight(Outtake.Height.GROUND);
-            //outtake.run(-1);
-            //drivetrain.MoveForDis(-.5, speed);
-            //drivetrain.MoveForDis(-.75, speed);
-
-            // turn to cone stack
-            //drivetrain.MoveForDis(1, speed);
-
-            telemetry.addLine("Stage 1 complete");
-        }
-        else{
-            cycles = 0;
-        }
-
-
-        for(int i = 0; i < cycles; i++) {
-            //drivetrain.RotateForDegree(-45 * posMod, speed);
-            drivetrain.rotateToPosition(-84 * posMod-2*(posMod-1), speed-.45-.25*(posMod-1));
-            intake.runArm(.16-.0325*i);
-            sleep(400);
-
-            // move backward toward cone stack
-            drivetrain.MoveForDis(-11.5, speed*.75);
-
-            // take another cone
-            intake.closeClaw();
-            intake.changeWristMode(Intake.WristMode.INDEPENDENT);
-            sleep(500);
-            intake.runArm(.4);
-            sleep(500);
-            intake.changeWristMode(Intake.WristMode.MATCHED);
-            intake.runArm(Intake.Height.RETRACTED);
-
-            // turn back
-            drivetrain.MoveForDis(11.5, speed);
-            //sleep(250);
-            intake.openClaw();
-            sleep(500);
-            outtake.closeClaw();
-            //drivetrain.RotateForDegree(45 * posMod, speed);
-            drivetrain.rotateToPosition(-45 * posMod, speed*.75);
-            intake.runArm(Intake.Height.DRIVESIZING);
-            //drivetrain.MoveForDis(.5, speed);
-            //drivetrain.MoveForDis(.75, 0.2);
-            //sleep(250);
-            outtake.setHeight(Outtake.Height.HIGH);
-            telemetry.addLine("height added");
-            telemetry.update();
-            sleep(200);
-            outtake.setHeight(1500);
-            outtake.openClaw();
-            outtake.setHeight(Outtake.Height.GROUND);
-            //outtake.run(-1);
-            if (i < cycles - 1) {
-                //drivetrain.MoveForDis(-.5, speed);
-            }
-        }
-        telemetry.addLine("Stage 2 complete");
-        telemetry.update();
-
-        // park
-        intake.runArm(Intake.Height.RETRACTED);
-        //drivetrain.RotateForDegree(-45 * posMod, speed);
-        if(tagOfInterest == null || tagOfInterest.id == MIDDLE){
-
-        }else if((tagOfInterest.id-2)*posMod==1){
-            drivetrain.rotateToPosition(-90 * posMod, speed-.25);
-            drivetrain.MoveForDis(-21, speed);
-
-        }else{
-            drivetrain.rotateToPosition(-90 * posMod, speed-.25);
-            drivetrain.MoveForDis(22, speed);
-        }
-
-        //drivetrain.RotateForDegree(90*posMod, speed);
-        drivetrain.rotateToPosition(0, speed-.25);
-        if(tagOfInterest != null && (tagOfInterest.id-2)*posMod==1) {
-            drivetrain.SideMoveForDis(2.5*posMod, speed);
-        }
-        drivetrain.MoveForDis(-12, speed);
-        intake.runArm(Intake.Height.RETRACTED);
-        telemetry.addLine("Stage 3 complete");
-        telemetry.update();
-    }*/
-
     /*void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
@@ -1896,121 +1753,5 @@ public class WARHOGAuto extends LinearOpMode {
 
     }*/
 
-    }
-}
-
-class ObjectDetectionPipeline extends OpenCvPipeline{
-
-    Mat YCrCb = new Mat();
-    Mat Y = new Mat();
-    Mat RectLEFT_Y = new Mat();
-    Mat RectCENTER_Y = new Mat();
-    Mat RectRIGHT_Y = new Mat();
-
-    int avg;
-    int avgLEFT;
-    int avgCENTER;
-    int avgRIGHT;
-
-    static final int STREAM_WIDTH = 1280; // modify for your camera
-    static final int STREAM_HEIGHT = 720; // modify for your camera
-
-    //Rectangle Sizes
-    static final int WidthRectSides = 300;
-    static final int HeightRectSides = 500;
-    static final int WidthRectCenter = 300;
-    static final int HeightRectCenter = 500;
-
-    //Change values here to correctly target the thirds
-    static final Point RectLeftTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 000, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
-    static final Point RectCenterTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectCenter) / 2 + 150, ((STREAM_HEIGHT - HeightRectCenter) / 2) - 100);
-    static final Point RectRightTopLeftAnchor = new Point((STREAM_WIDTH - WidthRectSides) / 2 + 450, ((STREAM_HEIGHT - HeightRectSides) / 2) - 100);
-
-    Point RectLeftTLCorner = new Point(RectLeftTopLeftAnchor.x, RectLeftTopLeftAnchor.y);
-    Point RectLeftBRCorner = new Point(RectLeftTopLeftAnchor.x + WidthRectSides, RectLeftTopLeftAnchor.y + HeightRectSides);
-
-    Point RectCenterTLCorner = new Point(RectCenterTopLeftAnchor.x, RectCenterTopLeftAnchor.y);
-    Point RectCenterBRCorner = new Point(RectCenterTopLeftAnchor.x + WidthRectCenter, RectCenterTopLeftAnchor.y + HeightRectCenter);
-
-    Point RectRightTLCorner = new Point(RectRightTopLeftAnchor.x, RectRightTopLeftAnchor.y);
-    Point RectRightBRCorner = new Point(RectRightTopLeftAnchor.x + WidthRectSides, RectRightTopLeftAnchor.y + HeightRectSides);
-
-
-     //This function takes the RGB frame, converts to YCrCb,
-     //and extracts the Y channel to the 'Y' variable
-
-    void inputToY(Mat input) {
-        Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
-        ArrayList<Mat> yCrCbChannels = new ArrayList<Mat>(3);
-        Core.split(YCrCb, yCrCbChannels);
-        Y = yCrCbChannels.get(0);
-    }
-
-    @Override
-    public void init(Mat firstFrame) {
-        inputToY(firstFrame);
-        RectLEFT_Y = Y.submat(new Rect(RectLeftTLCorner, RectLeftBRCorner));
-        RectCENTER_Y = Y.submat(new Rect(RectCenterTLCorner, RectCenterBRCorner));
-        RectRIGHT_Y = Y.submat(new Rect(RectRightTLCorner, RectRightBRCorner));
-    }
-
-    @Override
-    public Mat processFrame(Mat input) {
-        inputToY(input);
-        System.out.println("processing requested");
-        avg = (int) Core.mean(Y).val[0];
-        avgLEFT = (int) Core.mean(RectLEFT_Y).val[0];
-        avgCENTER = (int) Core.mean(RectCENTER_Y).val[0];
-        avgRIGHT = (int) Core.mean(RectRIGHT_Y).val[0];
-        YCrCb.release(); // don't leak memory!
-        Y.release(); // don't leak memory!
-
-        Imgproc.rectangle( // rings
-                input, // Buffer to draw on
-                RectLeftTLCorner, // First point which defines the rectangle
-                RectLeftBRCorner, // Second point which defines the rectangle
-                new Scalar(0,255,0), // The color the rectangle is drawn in
-                2); // Thickness of the rectangle lines
-
-        Imgproc.rectangle( // rings
-                input, // Buffer to draw on
-                RectCenterTLCorner, // First point which defines the rectangle
-                RectCenterBRCorner, // Second point which defines the rectangle
-                new Scalar(0,0,255), // The color the rectangle is drawn in
-                2); // Thickness of the rectangle lines
-
-        Imgproc.rectangle( // rings
-                input, // Buffer to draw on
-                RectRightTLCorner, // First point which defines the rectangle
-                RectRightBRCorner, // Second point which defines the rectangle
-                new Scalar(255,0,0), // The color the rectangle is drawn in
-                2); // Thickness of the rectangle lines
-
-        //===Test to see if this also causes errors==
-        releaseMats();
-
-        return input;
-    }
-
-    //Test to see if it fixes memory leak issue it probably will not
-    public void releaseMats(){
-        YCrCb.release();
-        Y.release();
-        RectLEFT_Y.release();
-        RectCENTER_Y.release();
-        RectRIGHT_Y.release();
-    }
-
-    public int getAnalysis() {
-        return avg;
-    }
-    public int getRectLeft_Analysis() {
-        return avgLEFT;
-    }
-    public int getRectCenter_Analysis() {
-        return avgCENTER;
-    }
-    public int getRectRight_Analysis() {
-        return avgRIGHT;
     }
 }
