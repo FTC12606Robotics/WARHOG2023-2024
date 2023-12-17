@@ -140,7 +140,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
 
 
-
             resetDriveAngle = currentGamepad1.dpad_up; //use when the robot is facing away from you
 
 
@@ -273,10 +272,10 @@ public class WARHOGTeleOp extends LinearOpMode {
 
 
             //turn off wrist fixed if arm is over a certain threshold
-            if(toggleIntakeClaw&&intake.isClawOpen()&&intake.getArmPos()>.01){
+            if(toggleIntakeClaw && intake.isClawOpen() && intake.getArmPos()>.01){
                 wristFixed=true;
             }
-            if(toggleIntakeClaw&&!intake.isClawOpen()){
+            if(toggleIntakeClaw && !intake.isClawOpen()){
                 //wristFixed=false;
             }
             if(intake.getArmPos()>1.1){
@@ -329,7 +328,8 @@ public class WARHOGTeleOp extends LinearOpMode {
                     if(rightConeStack<1){
                         rightConeStack = 5;
                     }
-                }else {
+                }
+                else {
                     armpos = intake.runArm(Intake.Height.EXTENDED);
                 }
             }
@@ -358,8 +358,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(toggleIntakeClaw){
                 intake.toggleClaw();
             }
-
-
 
             //open/close the outtake claw
             if(toggleOuttakeClaw){
@@ -418,7 +416,7 @@ public class WARHOGTeleOp extends LinearOpMode {
                 intake.runArm(Intake.Height.DRIVESIZING);
                 outtake.setTarget(0);
             }
-            if(isOuttakeAtTarget&&outtake.getTarget()==0){
+            if(isOuttakeAtTarget && outtake.getTarget()==0){
                 outtake.closeClaw();
             }
 
