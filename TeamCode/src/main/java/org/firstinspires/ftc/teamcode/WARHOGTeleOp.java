@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.exception.RobotCoreException;
+//import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -124,44 +124,19 @@ public class WARHOGTeleOp extends LinearOpMode {
 
             //change the modes based on the inputs
             if(wristFixedToggle) {
-                if(wristFixed) {
-                    wristFixed = false;
-                }
-                else{
-                    wristFixed = true;
-                }
+                wristFixed = !wristFixed;
             }
             if(oneDriverToggle){
-                if(oneDriver){
-                    oneDriver=false;
-                }
-                else{
-                    oneDriver=true;
-                }
+                oneDriver = !oneDriver;
             }
             if(stationaryToggle){
-                if(stationary){
-                    stationary=false;
-                }
-                else{
-                    stationary=true;
-                }
+                stationary = !stationary;
             }
             if(autoEjectToggle){
-                if(autoEjectMode){
-                    autoEjectMode=false;
-                }
-                else{
-                    autoEjectMode=true;
-                }
+                autoEjectMode = !autoEjectMode;
             }
             if(autoIntakeToggle){
-                if(autoIntakeMode){
-                    autoIntakeMode=false;
-                }
-                else{
-                    autoIntakeMode=true;
-                }
+                autoIntakeMode = !autoIntakeMode;
             }
 
 
