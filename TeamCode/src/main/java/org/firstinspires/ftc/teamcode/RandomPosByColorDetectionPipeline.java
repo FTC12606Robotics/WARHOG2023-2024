@@ -64,10 +64,6 @@ public class RandomPosByColorDetectionPipeline extends OpenCvPipeline {
         center.release();
         right.release();
 
-        //boolean posLeft = leftValue > PERCENT_WHITE_THRESHOLD;
-        //boolean posCenter = centerValue > PERCENT_WHITE_THRESHOLD;
-        //boolean posRight = rightValue > PERCENT_WHITE_THRESHOLD;
-
         if (leftValue >= PERCENT_WHITE_THRESHOLD & leftValue > rightValue & leftValue > centerValue){
             location = Location.LEFT;
         }

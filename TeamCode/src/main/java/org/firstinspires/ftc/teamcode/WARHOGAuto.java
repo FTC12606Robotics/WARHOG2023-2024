@@ -11,7 +11,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 @Autonomous(name="WARHOGAuto", group="")
 public class WARHOGAuto extends LinearOpMode {
@@ -45,8 +45,6 @@ public class WARHOGAuto extends LinearOpMode {
 
     boolean front=false, back=false, red=false, blue=false; //Bools to set position
 
-    //targetMidPos is for the legacy code
-    boolean targetMidPos = false; //To set whether to park in the corner of the backstage or middle of it
     boolean willPark = false; //for interior code use for if the robot will park
     boolean willSpike = false; //for interior code use for if the robot will place a pixel on a spike
     boolean willBoard = false; //for interior code use for if the robot will place a pixel on the backdrop
@@ -177,12 +175,6 @@ public class WARHOGAuto extends LinearOpMode {
             //To set where to park in backstage
             //***Maybe set a different button***
             if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
-                /*if(targetMidPos){
-                    targetMidPos = false;
-                }
-                else if(!targetMidPos){
-                    targetMidPos = true;
-                }*/
                 if(parkPos == ParkPos.MIDDLE){
                     parkPos = ParkPos.CORNER;
                 }
@@ -399,105 +391,6 @@ public class WARHOGAuto extends LinearOpMode {
                 back = true;
                 break;
         }
-
-        /*
-        //2023-2024 Autonomous Legacy Main Code:
-
-        //Wait
-        sleep((long)((startSleep)*1000));
-
-        //Blocks to run for different start positions
-        if(red&&front){
-            //Wait and then move off the wall
-            //sleep((long)((startSleep)*1000));
-            drivetrain.MoveForDis(4,speed);
-
-            //Check if we are going to the backstage middle
-            if(targetMidPos){
-                drivetrain.MoveForDis(51,speed);
-            }
-
-            //Retract arm to go under gate
-            intake.runArm(intake.armMax);
-
-            //Turn and Move to the backstage
-            drivetrain.RotateForDegree(90, speed-.25);
-            drivetrain.MoveForDis(96, speed);
-
-            //Move so not touching pixels hopefully
-            drivetrain.MoveForDis(-6,speed);
-
-            telemetry.addLine("Park complete");
-            telemetry.update();
-        }
-        else if(red&&back){
-            //Wait and then move off the wall
-            //sleep((long)(startSleep*1000));
-            drivetrain.MoveForDis(4,speed);
-
-            //Check if we are going to the backstage middle
-            if(targetMidPos){
-                drivetrain.MoveForDis(51,speed);
-            }
-
-            //Turn and Move to the backstage
-            drivetrain.RotateForDegree(90, speed-.25);
-            drivetrain.MoveForDis(48, speed);
-
-            //Move so not touching pixels hopefully
-            drivetrain.MoveForDis(-6,speed);
-
-            telemetry.addLine("Park complete");
-            telemetry.update();
-        }
-        else if(blue&&front){
-            //Wait and then move off the wall
-            //sleep((long)((startSleep)*1000));
-            drivetrain.MoveForDis(4,speed);
-
-            //Check if we are going to the backstage middle
-            if(targetMidPos){
-                drivetrain.MoveForDis(51,speed);
-            }
-
-            //Retract arm to go under the gate
-            intake.runArm(intake.armMax);
-
-            //Turn and Move to the backstage
-            drivetrain.RotateForDegree(-90, speed-.25);
-            drivetrain.MoveForDis(96, speed);
-
-            //Move so not touching pixels hopefully
-            drivetrain.MoveForDis(-6,speed);
-
-            telemetry.addLine("Park complete");
-            telemetry.update();
-        }
-        else if(blue&&back){
-            //Wait and then move off the wall
-            //sleep((long)((startSleep)*1000));
-            drivetrain.MoveForDis(4,speed);
-
-            //Check if we are going to the backstage middle
-            if(targetMidPos){
-                drivetrain.MoveForDis(51,speed);
-            }
-
-            //Retract arm to go under the gate
-            intake.runArm(intake.armMax);
-
-            //Turn and Move to the backstage
-            drivetrain.RotateForDegree(-90, speed-.25);
-            drivetrain.MoveForDis(96, speed);
-
-            //Move so not touching pixels hopefully
-            drivetrain.MoveForDis(-6,speed);
-
-            telemetry.addLine("Park complete");
-            telemetry.update();
-        }
-        */
-
 
         //2023-2024 Autonomous Main Code:
 
