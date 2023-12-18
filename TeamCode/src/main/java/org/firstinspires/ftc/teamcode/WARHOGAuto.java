@@ -20,6 +20,8 @@ public class WARHOGAuto extends LinearOpMode {
 
     private StartPosColor startPosColor = StartPosColor.RED;
     private enum StartPosColor {RED, BLUE}
+    public ColorChose colorChose;
+    public enum ColorChose {WHITE, RED, BLUE}
     private StartPosPosition startPosPosition = StartPosPosition.BACK;
     private enum StartPosPosition {FRONT, BACK}
     private ParkPos parkPos = ParkPos.CORNER;
@@ -172,6 +174,22 @@ public class WARHOGAuto extends LinearOpMode {
                 startSleep=0;
             }
 
+            //To set which color to search for in the pipeline
+            if (currentGamepad1.right_trigger>.2 && !(previousGamepad1.right_trigger>.2)) {
+                if(randomPosByColorDetectionPipeline.color == RandomPosByColorDetectionPipeline.Color.WHITE){
+                    randomPosByColorDetectionPipeline.color = RandomPosByColorDetectionPipeline.Color.RED;
+                    colorChose = ColorChose.RED;
+                }
+                else if (randomPosByColorDetectionPipeline.color == RandomPosByColorDetectionPipeline.Color.RED){
+                    randomPosByColorDetectionPipeline.color = RandomPosByColorDetectionPipeline.Color.BLUE;
+                    colorChose = ColorChose.BLUE;
+                }
+                else if (randomPosByColorDetectionPipeline.color == RandomPosByColorDetectionPipeline.Color.BLUE){
+                    randomPosByColorDetectionPipeline.color = RandomPosByColorDetectionPipeline.Color.WHITE;
+                    colorChose = ColorChose.WHITE;
+                }
+            }
+
             //To set where to park in backstage
             //***Maybe set a different button***
             if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
@@ -292,9 +310,9 @@ public class WARHOGAuto extends LinearOpMode {
 
             telemetry.addData("Color", startPosColor);
             telemetry.addData("Position", startPosPosition);
+            telemetry.addData("Detection Color", colorChose);
             telemetry.addData("Speed", speed);
             telemetry.addData("startSleep", startSleep);
-            //telemetry.addData("Target Middle Pos.", targetMidPos);
             telemetry.addData("Park Pos.", parkPos);
             telemetry.addData("Combination", actionCombination);
             telemetry.addData("Random Pos.", randomPos);
@@ -306,6 +324,7 @@ public class WARHOGAuto extends LinearOpMode {
             telemetry.addData("Left percentage", Math.round(randomPosByColorDetectionPipeline.leftValue * 100) + "%");
             telemetry.addData("Center percentage", Math.round(randomPosByColorDetectionPipeline.centerValue * 100) + "%");
             telemetry.addData("Right percentage", Math.round(randomPosByColorDetectionPipeline.rightValue * 100) + "%");
+            telemetry.addData("Color in Pipeline", randomPosByColorDetectionPipeline.color);
             telemetry.addData("Sensed Pos.", randomPosByColorDetectionPipeline.location);
             telemetry.addData("Use Camera?", useCamera);
 
