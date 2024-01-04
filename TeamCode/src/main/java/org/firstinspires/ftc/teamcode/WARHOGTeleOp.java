@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import static java.lang.String.*;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 @TeleOp(name="WARHOGTeleOp", group="")
 public class WARHOGTeleOp extends LinearOpMode {
@@ -26,28 +26,28 @@ public class WARHOGTeleOp extends LinearOpMode {
         //set up classes
         Drivetrain drivetrain = new Drivetrain(hardwareMap, telemetry);
         Intake intake = new Intake(hardwareMap, telemetry);
-        Outtake outtake = new Outtake(hardwareMap, telemetry);
-        WaitForLoops waitForLoops = new WaitForLoops();
+        //Outtake outtake = new Outtake(hardwareMap, telemetry);
+        //WaitForLoops waitForLoops = new WaitForLoops();
         //For drone Launch
         DroneLaunch droneLaunch = new DroneLaunch(hardwareMap, telemetry);
 
         //set up variables
-        double joyx, joyy, joyz, gas, basespeed, armpos, wristmod, offset, slideMovement,
-                maxIncrease, armposChange, intakeArmSpeed=.03, modAngle;
+        double joyx, joyy, joyz, gas, basespeed, armpos, wristmod, offset, /*slideMovement,
+                maxIncrease,*/ armposChange, intakeArmSpeed=.03, modAngle;
         boolean autoEjectMode = false;
         boolean autoIntakeMode = false;
-        boolean pauseToResetMaxIncrease = false;
+        //boolean pauseToResetMaxIncrease = false;
         boolean stationary = false;
-        boolean outtakeGround, outtakeLow, outtakeMedium, outtakeHigh, toggleOuttakeClaw = false,
+        boolean /*outtakeGround, outtakeLow, outtakeMedium, outtakeHigh, toggleOuttakeClaw = false,*/
                 centricityToggle, resetDriveAngle, autoEjectToggle, autoIntakeToggle,
-                stationaryToggle, toggleIntakeClaw, oneDriver = false, oneDriverToggle,
+                stationaryToggle, toggleIntakeClaw, /*oneDriver = false, oneDriverToggle,*/
                 extendIntakeArm = false, retractIntakeArm = false, uprightIntakeArm = false, sizingIntakeArm = false,
-                intakeCone=false, wristFixed = false, wristFixedToggle = false, isOuttakeAtTarget,
-                outtakeClawMoveIntake = false;
+                /*intakeCone = false,*/ wristFixed = false, wristFixedToggle = false/*, isOuttakeAtTarget,
+                outtakeClawMoveIntake = false*/;
         //For drone launch
         boolean launchDrone;
 
-        int leftConeStack = 5, rightConeStack = 5;
+        //int leftConeStack = 5, rightConeStack = 5;
 
         offset = 0;
         Drivetrain.Centricity centricity = Drivetrain.Centricity.FIELD;
@@ -63,7 +63,7 @@ public class WARHOGTeleOp extends LinearOpMode {
         droneLaunch.ArmDrone();
 
         while (!isStarted() && !isStopRequested()) {
-            outtake.openClaw();
+            //outtake.openClaw();
             armpos = intake.runArm(Intake.Height.UPRIGHT);
             try {
                 previousGamepad1.copy(currentGamepad1);
@@ -91,7 +91,7 @@ public class WARHOGTeleOp extends LinearOpMode {
         }
 
         drivetrain.setAngleOffset(offset);
-        oneDriver = false;
+        //oneDriver = false;
         autoEjectMode = false;
         autoIntakeMode = false;
 
@@ -110,7 +110,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
             telemetry.addData("angle", drivetrain.getIMUData()/PI*180);
 
-            isOuttakeAtTarget = outtake.update();
+            //isOuttakeAtTarget = outtake.update();
 
     //set up inputs
 
@@ -119,16 +119,16 @@ public class WARHOGTeleOp extends LinearOpMode {
             autoEjectToggle = currentGamepad2.start && !previousGamepad2.start;
             autoIntakeToggle = currentGamepad2.back && !previousGamepad2.back;
             stationaryToggle = currentGamepad1.back && !previousGamepad1.back;
-            oneDriverToggle = currentGamepad1.start && !previousGamepad1.start;
+            //oneDriverToggle = currentGamepad1.start && !previousGamepad1.start;
             wristFixedToggle = currentGamepad2.left_trigger>.2 && !(previousGamepad2.left_trigger>.2);
 
             //change the modes based on the inputs
             if(wristFixedToggle) {
                 wristFixed = !wristFixed;
             }
-            if(oneDriverToggle){
+            /*if(oneDriverToggle){
                 oneDriver = !oneDriver;
-            }
+            }*/
             if(stationaryToggle){
                 stationary = !stationary;
             }
@@ -145,7 +145,7 @@ public class WARHOGTeleOp extends LinearOpMode {
 
             telemetry.addData("Stationary", stationary);
             //set up operator commands based on whether oneDriver mode is on
-            if(oneDriver){
+            /*if(oneDriver){
                 outtakeGround = false;
                 outtakeLow = false;
                 outtakeMedium = false;
@@ -199,8 +199,8 @@ public class WARHOGTeleOp extends LinearOpMode {
 
                     slideMovement = 0;
                 }
-            }
-            else {
+            }*/
+            //else { *************IF ABOVE CODE IS UNNEEDED RESET THE INDENTATION IN CODE BELOW, BECAUSE OF THE ELSE STATEMENT************
                 //code to switch between field centric and bot centric drive
                 if(centricityToggle){
                     if(centricity==Drivetrain.Centricity.BOT){
@@ -214,7 +214,7 @@ public class WARHOGTeleOp extends LinearOpMode {
                 armposChange = currentGamepad2.left_stick_y*intakeArmSpeed;
                 toggleIntakeClaw = currentGamepad2.left_bumper && !previousGamepad2.left_bumper;
                 if(autoIntakeMode){
-                    intakeCone = currentGamepad2.dpad_down;
+                    //intakeCone = currentGamepad2.dpad_down;
                     //if(toggleIntakeClaw){
                         //waitForLoops.addWaitEvent("Raise Intake Arm", 20);
                     //}
@@ -222,12 +222,13 @@ public class WARHOGTeleOp extends LinearOpMode {
                 else {
                     retractIntakeArm = currentGamepad2.dpad_down;
                 }
-                sizingIntakeArm = currentGamepad2.dpad_right || (outtakeClawMoveIntake&&intake.getArmPos()>.7);
+                //sizingIntakeArm = currentGamepad2.dpad_right || (outtakeClawMoveIntake&&intake.getArmPos()>.7);
+                sizingIntakeArm = currentGamepad2.dpad_right;
                 uprightIntakeArm = currentGamepad2.dpad_left;
                 extendIntakeArm = currentGamepad2.dpad_up && !previousGamepad2.dpad_up;
 
                 //set up slide commands based on whether stationary mode is on
-                if (!stationary) {
+                /*if (!stationary) {
                     slideMovement = -currentGamepad2.right_stick_y;
                     outtakeGround = currentGamepad2.a;
                     outtakeLow = currentGamepad2.x;
@@ -236,7 +237,8 @@ public class WARHOGTeleOp extends LinearOpMode {
                     toggleOuttakeClaw = (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) || (currentGamepad2.right_trigger>.2 && !(previousGamepad2.right_trigger>.2));
                     outtakeClawMoveIntake = currentGamepad2.right_bumper && !previousGamepad2.right_bumper;
                     maxIncrease = currentGamepad2.right_trigger * 100;
-                } else {
+                }
+                else {
                     if(currentGamepad1.left_bumper){
                         slideMovement = 1;
                     }
@@ -254,8 +256,8 @@ public class WARHOGTeleOp extends LinearOpMode {
                     toggleOuttakeClaw = (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) || (currentGamepad1.right_trigger>.2 && !(previousGamepad1.right_trigger>.2));
                     outtakeClawMoveIntake = currentGamepad1.right_bumper && !previousGamepad1.right_bumper;
                     maxIncrease = currentGamepad1.left_trigger * 100;
-                }
-            }
+                }*/
+            //}
 
 
             //set up vectors
@@ -312,10 +314,10 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
             modAngle = (drivetrain.getIMUData()/PI*180)%360;
             telemetry.addData("mod angle", modAngle);
-            telemetry.addData("left cone stack", leftConeStack);
-            telemetry.addData("right cone stack", rightConeStack);
+            //telemetry.addData("left cone stack", leftConeStack);
+            //telemetry.addData("right cone stack", rightConeStack);
             if(extendIntakeArm){
-                if(modAngle>45 && modAngle<135){
+                /*if(modAngle>45 && modAngle<135){
                     armpos = .15-.0375*(5-leftConeStack);
                     leftConeStack -= 1;
                     if(leftConeStack<1){
@@ -329,9 +331,9 @@ public class WARHOGTeleOp extends LinearOpMode {
                         rightConeStack = 5;
                     }
                 }
-                else {
+                else {*/
                     armpos = intake.runArm(Intake.Height.EXTENDED);
-                }
+                //}
             }
             if(uprightIntakeArm){
                 armpos = intake.runArm(Intake.Height.UPRIGHT);
@@ -339,9 +341,9 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(sizingIntakeArm){
                 armpos = intake.runArm(Intake.Height.DRIVESIZING);
             }
-            if(intakeCone){
+            /*if(intakeCone){
                 intake.intakeCone();
-            }
+            }*/
 
             //move the arm, modifying the wrist's position if right trigger is pressed
             wristmod = 0; //(currentGamepad2.left_trigger-.2)*.625;
@@ -360,10 +362,10 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
 
             //open/close the outtake claw
-            if(toggleOuttakeClaw){
+            /*if(toggleOuttakeClaw){
                 outtake.toggleClaw();
                 telemetry.addLine("Toggle OuttakeClaw");
-            }
+            }*/
 
             //Set Up input to launch drone
             launchDrone = gamepad2.right_stick_button;
@@ -374,7 +376,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
 
             //increase slide maximum
-            if(outtake.showSlideValue()>1600 && maxIncrease>0) {
+            /*if(outtake.showSlideValue()>1600 && maxIncrease>0) {
                 if (!pauseToResetMaxIncrease) {
                     outtake.increaseMax(currentGamepad2.right_trigger * 50, currentGamepad2.right_stick_button && !previousGamepad2.right_stick_button);
                     if (currentGamepad2.right_stick_button && !previousGamepad2.right_stick_button) {
@@ -385,10 +387,10 @@ public class WARHOGTeleOp extends LinearOpMode {
                         pauseToResetMaxIncrease = false;
                     }
                 }
-            }
+            }*/
 
             //move the outtake slides up and down
-            if(!outtake.isSlideGoingToPosition()) {
+            /*if(!outtake.isSlideGoingToPosition()) {
                 outtake.run(slideMovement);
                 telemetry.addLine("moving using stick");
             }
@@ -408,34 +410,32 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(outtakeHigh){
                 outtake.setHeightWithoutWaiting(Outtake.Height.HIGH);
                 telemetry.addLine("Y");
-            }
+            }*/
 
-            telemetry.addData("slide max", outtake.getMax());
+            //telemetry.addData("slide max", outtake.getMax());
 
-            if(waitForLoops.checkEvent("Raise Intake Arm")){
+            /*if(waitForLoops.checkEvent("Raise Intake Arm")){
                 intake.runArm(Intake.Height.DRIVESIZING);
                 outtake.setTarget(0);
-            }
-            if(isOuttakeAtTarget && outtake.getTarget()==0){
+            }*/
+            /*if(isOuttakeAtTarget && outtake.getTarget()==0){
                 outtake.closeClaw();
-            }
+            }*/
 
             //end step
             telemetry.update();
-            waitForLoops.update();
+            //waitForLoops.update();
         }
 
     }
 
-    private class WaitForLoops{
+    /*private class WaitForLoops{
         int loopsSoFar = 0;
 
         ArrayList<String> names = new ArrayList<String>();
         ArrayList<Integer> waitTimes = new ArrayList<Integer>();
 
-        public void update(){
-            loopsSoFar+=1;
-        }
+        public void update(){loopsSoFar+=1;}
 
         public void addWaitEvent(String name, int loops){
             if(names.contains(name)){
@@ -456,5 +456,5 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
             return isEventTriggered;
         }
-    }
+    }*/
 }

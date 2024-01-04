@@ -201,7 +201,7 @@ public class Intake {
         }
     }
 
-    //Autonomous use, Don't think it is needed anymore
+    //Don't think it is needed anymore
     public void intakeCone() throws InterruptedException{
         closeClaw();
         sleep(25);
