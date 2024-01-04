@@ -15,10 +15,11 @@ public class Intake {
 
     double armMax = .99;
     double armMin = 0;
-
     double retracted = 1;
     double extended = armMin;
-    double armMid = .6;
+    double armHover = .2; //Just off the ground for transporting
+    double armBoardParallel = .5;  //Parallel to the board
+    double armUpright = .6; //Might not be needed
     double driveSizing = .8;
     double startSizing = .85;
 
@@ -39,7 +40,7 @@ public class Intake {
     }
 
     public enum WristMode{INDEPENDENT, MATCHED, SIDEWAYS}
-    public enum Height{EXTENDED, UPRIGHT, RETRACTED, DRIVESIZING, STARTSIZING}
+    public enum Height{EXTENDED, UPRIGHT, RETRACTED, HOVER, BOARDPARALLEL, DRIVESIZING, STARTSIZING}
 
     //moves arm to a position
     public void runArm(double pos) throws InterruptedException{
@@ -135,11 +136,17 @@ public class Intake {
                 runArm(extended);
                 return extended;
             case UPRIGHT:
-                runArm(armMid);
-                return armMid;
+                runArm(armUpright);
+                return armUpright;
             case RETRACTED:
                 runArm(retracted);
                 return retracted;
+            case HOVER:
+                runArm(armHover);
+                return armHover;
+            case BOARDPARALLEL:
+                runArm(armBoardParallel);
+                return armBoardParallel;
             case DRIVESIZING:
                 runArm(driveSizing);
                 return driveSizing;
@@ -154,7 +161,7 @@ public class Intake {
             openClaw();
         }
 
-        return armMid;
+        return armUpright;
     }
 
     //this method moves the wrist to a position

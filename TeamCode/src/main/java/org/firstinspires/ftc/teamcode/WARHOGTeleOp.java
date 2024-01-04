@@ -41,7 +41,7 @@ public class WARHOGTeleOp extends LinearOpMode {
         boolean /*outtakeGround, outtakeLow, outtakeMedium, outtakeHigh, toggleOuttakeClaw = false,*/
                 centricityToggle, resetDriveAngle, autoEjectToggle, autoIntakeToggle,
                 stationaryToggle, toggleIntakeClaw, /*oneDriver = false, oneDriverToggle,*/
-                extendIntakeArm = false, retractIntakeArm = false, uprightIntakeArm = false, sizingIntakeArm = false,
+                extendIntakeArm = false, retractIntakeArm = false, uprightIntakeArm = false, sizingIntakeArm = false, hoverIntakeArm = false, boardParallelIntakeArm = false,
                 /*intakeCone = false,*/ wristFixed = false, wristFixedToggle = false/*, isOuttakeAtTarget,
                 outtakeClawMoveIntake = false*/;
         //For drone launch
@@ -213,6 +213,7 @@ public class WARHOGTeleOp extends LinearOpMode {
 
                 armposChange = currentGamepad2.left_stick_y*intakeArmSpeed;
                 toggleIntakeClaw = currentGamepad2.left_bumper && !previousGamepad2.left_bumper;
+                //*****************KEEP THE AUTO INTAKE MODE FOR NOW, MIGHT USE IT LATER*****************
                 if(autoIntakeMode){
                     //intakeCone = currentGamepad2.dpad_down;
                     //if(toggleIntakeClaw){
@@ -226,6 +227,9 @@ public class WARHOGTeleOp extends LinearOpMode {
                 sizingIntakeArm = currentGamepad2.dpad_right;
                 uprightIntakeArm = currentGamepad2.dpad_left;
                 extendIntakeArm = currentGamepad2.dpad_up && !previousGamepad2.dpad_up;
+                hoverIntakeArm = currentGamepad2.x;
+                boardParallelIntakeArm = currentGamepad2.b;
+
 
                 //set up slide commands based on whether stationary mode is on
                 /*if (!stationary) {
@@ -292,7 +296,6 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
 
 
-
             //set and print motor powers
             double[] motorPowers = drivetrain.driveVectors(centricity, joyx, joyy, joyz, basespeed+gas);
             for (double line:motorPowers){
@@ -312,7 +315,7 @@ public class WARHOGTeleOp extends LinearOpMode {
             if(retractIntakeArm){
                 armpos = intake.runArm(Intake.Height.RETRACTED);
             }
-            modAngle = (drivetrain.getIMUData()/PI*180)%360;
+            modAngle = (drivetrain.getIMUData()/PI*180)%360;    //********Reposition or take out these 2 lines if not needed, figure out what nod angle is for*********
             telemetry.addData("mod angle", modAngle);
             //telemetry.addData("left cone stack", leftConeStack);
             //telemetry.addData("right cone stack", rightConeStack);
@@ -337,6 +340,12 @@ public class WARHOGTeleOp extends LinearOpMode {
             }
             if(uprightIntakeArm){
                 armpos = intake.runArm(Intake.Height.UPRIGHT);
+            }
+            if(hoverIntakeArm){
+                armpos = intake.runArm(Intake.Height.HOVER);
+            }
+            if(boardParallelIntakeArm){
+                armpos = intake.runArm(Intake.Height.BOARDPARALLEL);
             }
             if(sizingIntakeArm){
                 armpos = intake.runArm(Intake.Height.DRIVESIZING);
