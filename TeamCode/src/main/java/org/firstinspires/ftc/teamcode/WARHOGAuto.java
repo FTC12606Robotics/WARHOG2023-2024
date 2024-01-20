@@ -191,7 +191,6 @@ public class WARHOGAuto extends LinearOpMode {
             }
 
             //To set where to park in backstage
-            //***Maybe set a different button***
             if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
                 if(parkPos == ParkPos.MIDDLE){
                     parkPos = ParkPos.CORNER;
@@ -472,7 +471,7 @@ public class WARHOGAuto extends LinearOpMode {
             if(actionCombination == ActionCombination.SPIKE_ONLY){
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(20, speed-.25);
@@ -507,7 +506,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(-30, speed-.25);
@@ -585,14 +584,14 @@ public class WARHOGAuto extends LinearOpMode {
                 //What to do if the randomPos is Left
                 if (randomPos == RandomPos.LEFT) {
                     //Move off the wall
-                    drivetrain.MoveForDis(10, speed);
+                    drivetrain.MoveForDis(8, speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(20, speed - .25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -609,7 +608,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -622,14 +621,14 @@ public class WARHOGAuto extends LinearOpMode {
                 //What to do if the randomPos is Right
                 else if (randomPos == RandomPos.RIGHT) {
                     //Move off the wall
-                    drivetrain.MoveForDis(10, speed);
+                    drivetrain.MoveForDis(8, speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(-30, speed - .25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -680,7 +679,12 @@ public class WARHOGAuto extends LinearOpMode {
                     //To go to the corner of the backstage
                     else if (parkPos == ParkPos.CORNER) {
                             //Move back to be inline
-                            drivetrain.MoveForDis(-7, speed - .2);
+                            if (randomPos == RandomPos.CENTER){
+                                drivetrain.MoveForDis(-7, speed - .2);
+                            }
+                            else{
+                                drivetrain.MoveForDis(-5, speed - .2);
+                            }
 
                             //Retract arm to go under the gate
                             intake.runArm(intake.armMax);
@@ -773,7 +777,7 @@ public class WARHOGAuto extends LinearOpMode {
             if(actionCombination == ActionCombination.SPIKE_ONLY){
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(20, speed-.25);
@@ -808,7 +812,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(-30, speed-.25);
@@ -886,14 +890,14 @@ public class WARHOGAuto extends LinearOpMode {
                 //What to do if the randomPos is Left
                 if (randomPos == RandomPos.LEFT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(20, speed-.25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -910,7 +914,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -923,14 +927,14 @@ public class WARHOGAuto extends LinearOpMode {
                 //What to do if the randomPos is Right
                 else if (randomPos == RandomPos.RIGHT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(-30, speed-.25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -984,7 +988,12 @@ public class WARHOGAuto extends LinearOpMode {
                     //To go to the corner of the backstage
                     else if (parkPos == ParkPos.CORNER){
                         //Move back to be inline
-                        drivetrain.MoveForDis(-7,speed-.2);
+                        if (randomPos == RandomPos.CENTER){
+                            drivetrain.MoveForDis(-7, speed - .2);
+                        }
+                        else{
+                            drivetrain.MoveForDis(-5, speed - .2);
+                        }
 
                         //Turn and Move to the backstage
                         drivetrain.RotateForDegree(90*colorMod, speed-.25);
@@ -1080,7 +1089,7 @@ public class WARHOGAuto extends LinearOpMode {
             if(actionCombination == ActionCombination.SPIKE_ONLY){
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(20, speed-.25);
@@ -1115,7 +1124,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(-30, speed-.25);
@@ -1193,14 +1202,14 @@ public class WARHOGAuto extends LinearOpMode {
                 //What to do if the randomPos is Left
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(20, speed-.25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -1217,7 +1226,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -1230,14 +1239,14 @@ public class WARHOGAuto extends LinearOpMode {
                 //What to do if the randomPos is Right
                 else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(-30, speed-.25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -1288,13 +1297,18 @@ public class WARHOGAuto extends LinearOpMode {
                     //To go to the corner of the backstage
                     else if(parkPos == ParkPos.CORNER){
                         //Move back to be inline
-                        drivetrain.MoveForDis(-7,speed-.2);
+                        if (randomPos == RandomPos.CENTER){
+                            drivetrain.MoveForDis(-7, speed - .2);
+                        }
+                        else{
+                            drivetrain.MoveForDis(-5, speed - .2);
+                        }
 
                         //Retract arm to go under the gate
                         intake.runArm(intake.armMax);
 
                         //Turn and Move to the backstage
-                        drivetrain.RotateForDegree(90*colorMod, speed-.25);
+                        drivetrain.RotateForDegree(88*colorMod, speed-.25);
                         drivetrain.MoveForDis(96, speed);
 
                         telemetry.addLine("Park complete");
@@ -1389,7 +1403,7 @@ public class WARHOGAuto extends LinearOpMode {
             if(actionCombination == ActionCombination.SPIKE_ONLY){
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(20, speed-.25);
@@ -1424,7 +1438,7 @@ public class WARHOGAuto extends LinearOpMode {
                 }
                 else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(-30, speed-.25);
@@ -1510,14 +1524,14 @@ public class WARHOGAuto extends LinearOpMode {
                 //What to do if the randomPos is Left
                 if(randomPos == RandomPos.LEFT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(20, speed-.25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -1534,7 +1548,7 @@ public class WARHOGAuto extends LinearOpMode {
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -1547,14 +1561,14 @@ public class WARHOGAuto extends LinearOpMode {
                 //What to do if the randomPos is Right
                 else if(randomPos == RandomPos.RIGHT){
                     //Move off the wall
-                    drivetrain.MoveForDis(10,speed);
+                    drivetrain.MoveForDis(8,speed);
 
                     //Rotate for arm to place pixel
                     drivetrain.RotateForDegree(-30, speed-.25);
 
                     //Run arm to place pixel on spike
                     intake.runArm(.10);
-                    sleep(1000);
+                    sleep(1500);
 
                     //Open claw, retract arm
                     intake.openClaw();
@@ -1608,7 +1622,12 @@ public class WARHOGAuto extends LinearOpMode {
                     //To go to the corner of the backstage
                     else if(parkPos == ParkPos.CORNER){
                         //Move back to be inline
-                        drivetrain.MoveForDis(-7,speed-.2);
+                        if (randomPos == RandomPos.CENTER){
+                            drivetrain.MoveForDis(-7, speed - .2);
+                        }
+                        else{
+                            drivetrain.MoveForDis(-5, speed - .2);
+                        }
 
                         //Turn and Move to the backstage
                         drivetrain.RotateForDegree(90*colorMod, speed-.25);
