@@ -37,6 +37,8 @@ public class Intake {
         rightClaw = hardwareMap.get(Servo.class, "right_claw");
         leftClaw = hardwareMap.get(Servo.class, "left_claw");
         wristMode = WristMode.MATCHED;
+        //For begin of auto?
+        closeClaw();
     }
 
     public enum WristMode{INDEPENDENT, MATCHED, SIDEWAYS}

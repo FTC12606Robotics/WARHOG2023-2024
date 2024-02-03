@@ -377,10 +377,10 @@ public class WARHOGTeleOp extends LinearOpMode {
             }*/
 
             //Set Up input to launch drone
-            launchDrone = gamepad2.right_stick_button;
+            //launchDrone = gamepad2.right_stick_button;
 
             //Launch Drone
-            if(launchDrone){
+            if(gamepad2.right_stick_button & gamepad2.left_stick_button){
                 droneLaunch.LaunchDrone();
             }
 
